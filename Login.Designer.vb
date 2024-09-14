@@ -104,7 +104,7 @@ Partial Class Login
         ' PictureBoxSHOW
         ' 
         PictureBoxSHOW.BackColor = Color.White
-        PictureBoxSHOW.Image = My.Resources.Resources.icono_mostrar
+        PictureBoxSHOW.Image = My.Resources.Resources.view_show_icon_124811
         PictureBoxSHOW.Location = New Point(298, 272)
         PictureBoxSHOW.Name = "PictureBoxSHOW"
         PictureBoxSHOW.Size = New Size(22, 20)
