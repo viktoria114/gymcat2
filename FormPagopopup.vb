@@ -36,7 +36,7 @@ Public Class FormPagopopup
 	Public TipoMov As String
 	Public NomCompleto As String
 
-	Public Sub New(DNI_miembro1 As Integer, modo1 As String)
+	Public Sub New(DNI_miembro1 As Integer, modo1 As String) 'CONSTRUCTOR PARA CUOTA Y MEMBRESIA
 		InitializeComponent()
 		Modo = modo1
 		DNI_Miembro = DNI_miembro1
@@ -390,16 +390,24 @@ Public Class FormPagopopup
 	End Sub
 
 	Sub actualizarMiembroMesIngreso()
+		Dim mesactual As Integer
+		Dim mesNombre As String = Format(Now, "MMMM")
 
-		Dim comando As New MySqlCommand("SELECT * FROM mes WHERE mes = @mes", _Conexion.miConexion)
-		comando.Parameters.AddWithValue("@mes", Format(Now, "MMMM"))
+		' Crea el comando con la consulta SQL y el parámetro
+		Dim comando As New MySqlCommand("SELECT ID_mes FROM mes WHERE mes = @mes", _Conexion.miConexion)
+		comando.Parameters.AddWithValue("@mes", mesNombre)
 
 		_Conexion.miConexion.Open()
+		Dim lector1 = comando.ExecuteReader()
 
-		Dim lector = comando.ExecuteReader
-		lector.Read()
-		Dim mesactual As Integer = lector("ID_mes")
+		' Verifica si se encontraron filas
+		If lector1.Read() Then
+			mesactual = lector1("ID_mes") ' Obtiene el ID del mes
+		Else
+			MsgBox("No se encontró el mes actual en la base de datos.")
+		End If
 
+		lector1.Close()
 		_Conexion.miConexion.Close()
 
 
