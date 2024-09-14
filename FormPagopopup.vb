@@ -174,12 +174,21 @@ Public Class FormPagopopup
 				cbMeses.Enabled = False
 
 			Case "Generico"
+				Me.Width = 500
+				Me.Height = 400
 				gbInfoPago.Height = 151
 				gbInfoMiembro.Hide()
 				PanelSelectorMiembro.Hide()
 				PanelMeses.Hide()
 				Label7.Hide()
 				dgvFactura.Hide()
+				If TipoMov = "Ingreso" Then
+					btnImprimir.Show()
+					btnPagar.Location = New Point(62, 6)
+				ElseIf TipoMov = "Egreso" Then
+					btnImprimir.Hide()
+					btnPagar.Location = New Point(165, 6)
+				End If
 				'btnPagar.Location = New Point(82, 314)
 				'btnImprimir.Location = New Point(214, 314)
 				'Me.Height = 478
@@ -426,7 +435,18 @@ Public Class FormPagopopup
 	End Sub
 
 	Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
-		gbInfoMiembro.Show()
+		Select Case Modo
+			Case "Generico"
+
+			Case "Cuota"
+				gbInfoMiembro.Show()
+			Case "Inscripcion"
+
+			Case "Membresia"
+				gbInfoMiembro.Show()
+		End Select
+
+
 	End Sub
 
 
