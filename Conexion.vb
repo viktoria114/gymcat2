@@ -75,7 +75,7 @@ Public Class Conexion
         Me.vistaDatos3 = GymcatDataSet.Tables(tabla3).DefaultView
 
     End Sub
-
+    'Tonto el que lee
 End Class
 
 
