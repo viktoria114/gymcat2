@@ -81,7 +81,7 @@ Partial Class FormInscripciones
 		btnDesinscribir.FlatStyle = FlatStyle.Popup
 		btnDesinscribir.Font = New Font("Cascadia Mono SemiBold", 11F, FontStyle.Bold)
 		btnDesinscribir.ForeColor = SystemColors.Control
-		btnDesinscribir.Image = My.Resources.Resources.icono_flecha_derecha
+		btnDesinscribir.Image = My.Resources.Resources.avance_rapido__3_
 		btnDesinscribir.ImageAlign = ContentAlignment.MiddleLeft
 		btnDesinscribir.Location = New Point(446, 404)
 		btnDesinscribir.Name = "btnDesinscribir"
@@ -260,7 +260,7 @@ Partial Class FormInscripciones
 		btnGuardar.FlatStyle = FlatStyle.Popup
 		btnGuardar.Font = New Font("Cascadia Mono SemiBold", 11F, FontStyle.Bold)
 		btnGuardar.ForeColor = SystemColors.Control
-		btnGuardar.Image = My.Resources.Resources.icono_item_guardar
+		btnGuardar.Image = My.Resources.Resources.boton_guardar
 		btnGuardar.ImageAlign = ContentAlignment.MiddleLeft
 		btnGuardar.Location = New Point(446, 484)
 		btnGuardar.Name = "btnGuardar"
