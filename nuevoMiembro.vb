@@ -8,7 +8,7 @@
             tbEdad.Text = ""
             dtpInscripcion.Text = Today
             cbDuracMemb.Text = ""
-            tbCostoTotal.Text = "15000"
+            tbCostoTotal.Enabled = False
             tbTelef.Text = ""
             tbCorreo.Text = ""
             tbPuntos.Text = "0"
@@ -23,16 +23,22 @@
             dtpInscripcion.Text = fila.Cells(5).Value
             cbDuracMemb.Text = fila.Cells(6).Value
             tbCostoTotal.Text = fila.Cells(7).Value
+            tbCostoTotal.Enabled = True
             cbDeudor.Checked = fila.Cells(8).Value
             tbTelef.Text = fila.Cells(9).Value
             tbCorreo.Text = fila.Cells(10).Value
             tbPuntos.Text = fila.Cells(11).Value
         End If
 
-        AddHandler cbDuracMemb.SelectedIndexChanged, AddressOf CalcularCostoTotal
+
     End Sub
 
     Private Sub btnGuardar_Click(sender As Object, e As EventArgs) Handles btnGuardar.Click
+        If CrudMiembros._Conexion.esNuevo Then
+            tbCostoTotal.Text = CalcularCostoTotla()
+        Else
+
+        End If
         CrudMiembros.Guardar()
         Me.Close()
     End Sub
@@ -41,15 +47,30 @@
         Me.Close()
     End Sub
 
-    Private Sub CalcularCostoTotal(sender As Object, e As EventArgs) Handles cbDuracMemb.SelectedIndexChanged
-        Dim duracion As Integer
-        Dim costoPorMes = 15000
-
-        ' Convierte la duración seleccionada a un número entero
-        If Integer.TryParse(cbDuracMemb.Text, duracion) Then
-            ' Calcula el costo total
-            tbCostoTotal.Text = (duracion * costoPorMes).ToString
+    Private Function CalcularCostoTotla() As Single
+        If cbDuracMemb.Text < 3 Then
+            Return 15000
+        ElseIf cbDuracMemb.Text >= 3 And cbDuracMemb.Text < 12 Then
+            Return 15000 * 0.85
+        ElseIf cbDuracMemb.Text >= 12 Then
+            Return 15000 * 0.7
         End If
+    End Function
+
+    Private Sub cbDuracMemb_TextChanged(sender As Object, e As EventArgs) Handles cbDuracMemb.TextChanged
+        Dim columnaSeleccionada = cbDuracMemb.SelectedItem
+
+        If columnaSeleccionada < 3 Then
+            lbMensajeDescuento.Text = ""
+            tbCostoTotal.Text = 15000
+        ElseIf columnaSeleccionada >= 3 And columnaSeleccionada < 12 Then
+            lbMensajeDescuento.Text = "Se va a aplicar un descuento" & vbCrLf & "del 15% a la cuota"
+            tbCostoTotal.Text = 15000 * 0.85
+        ElseIf columnaSeleccionada >= 12 Then
+            lbMensajeDescuento.Text = "Se va a aplicar un descuento" & vbCrLf & "del 30% a la cuota"
+            tbCostoTotal.Text = 15000 * 0.7
+        End If
+
     End Sub
 End Class
 
