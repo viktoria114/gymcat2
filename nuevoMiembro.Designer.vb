@@ -38,7 +38,6 @@ Partial Class nuevoMiembro
         Label9 = New Label()
         btnGuardar = New Button()
         btnCancelar = New Button()
-        tbCostoTotal = New TextBox()
         Label10 = New Label()
         Label11 = New Label()
         tbPuntos = New TextBox()
@@ -46,6 +45,8 @@ Partial Class nuevoMiembro
         cbDeudor = New CheckBox()
         dtpInscripcion = New DateTimePicker()
         cbDuracMemb = New ComboBox()
+        lbMensajeDescuento = New Label()
+        tbCostoTotal = New TextBox()
         SuspendLayout()
         ' 
         ' tbNombre
@@ -185,7 +186,7 @@ Partial Class nuevoMiembro
         btnGuardar.Font = New Font("Cascadia Mono", 12F)
         btnGuardar.ForeColor = SystemColors.ButtonFace
         btnGuardar.ImageAlign = ContentAlignment.MiddleRight
-        btnGuardar.Location = New Point(67, 392)
+        btnGuardar.Location = New Point(70, 422)
         btnGuardar.Name = "btnGuardar"
         btnGuardar.Size = New Size(147, 50)
         btnGuardar.TabIndex = 6
@@ -200,21 +201,13 @@ Partial Class nuevoMiembro
         btnCancelar.Font = New Font("Cascadia Mono", 12F)
         btnCancelar.ForeColor = SystemColors.ButtonFace
         btnCancelar.ImageAlign = ContentAlignment.MiddleRight
-        btnCancelar.Location = New Point(252, 392)
+        btnCancelar.Location = New Point(253, 422)
         btnCancelar.Name = "btnCancelar"
         btnCancelar.Size = New Size(147, 50)
         btnCancelar.TabIndex = 7
         btnCancelar.Text = "Cancelar"
         btnCancelar.TextAlign = ContentAlignment.MiddleLeft
         btnCancelar.UseVisualStyleBackColor = False
-        ' 
-        ' tbCostoTotal
-        ' 
-        tbCostoTotal.Location = New Point(171, 272)
-        tbCostoTotal.Name = "tbCostoTotal"
-        tbCostoTotal.ReadOnly = True
-        tbCostoTotal.Size = New Size(192, 23)
-        tbCostoTotal.TabIndex = 0
         ' 
         ' Label10
         ' 
@@ -285,12 +278,31 @@ Partial Class nuevoMiembro
         cbDuracMemb.Size = New Size(192, 23)
         cbDuracMemb.TabIndex = 39
         ' 
+        ' lbMensajeDescuento
+        ' 
+        lbMensajeDescuento.AutoSize = True
+        lbMensajeDescuento.Font = New Font("Cascadia Mono SemiBold", 13F, FontStyle.Bold)
+        lbMensajeDescuento.ForeColor = SystemColors.ButtonFace
+        lbMensajeDescuento.Location = New Point(55, 362)
+        lbMensajeDescuento.Name = "lbMensajeDescuento"
+        lbMensajeDescuento.Size = New Size(0, 24)
+        lbMensajeDescuento.TabIndex = 40
+        ' 
+        ' tbCostoTotal
+        ' 
+        tbCostoTotal.Location = New Point(171, 276)
+        tbCostoTotal.Name = "tbCostoTotal"
+        tbCostoTotal.Size = New Size(192, 23)
+        tbCostoTotal.TabIndex = 41
+        ' 
         ' nuevoMiembro
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.FromArgb(CByte(33), CByte(31), CByte(45))
-        ClientSize = New Size(431, 484)
+        ClientSize = New Size(431, 508)
+        Controls.Add(tbCostoTotal)
+        Controls.Add(lbMensajeDescuento)
         Controls.Add(cbDuracMemb)
         Controls.Add(dtpInscripcion)
         Controls.Add(cbDeudor)
@@ -308,7 +320,6 @@ Partial Class nuevoMiembro
         Controls.Add(Label4)
         Controls.Add(Label3)
         Controls.Add(tbPuntos)
-        Controls.Add(tbCostoTotal)
         Controls.Add(tbCorreo)
         Controls.Add(tbTelef)
         Controls.Add(tbEdad)
@@ -336,7 +347,6 @@ Partial Class nuevoMiembro
     Friend WithEvents Label9 As Label
     Friend WithEvents btnGuardar As Button
     Friend WithEvents btnCancelar As Button
-    Friend WithEvents tbCostoTotal As TextBox
     Friend WithEvents Label10 As Label
     Friend WithEvents Label11 As Label
     Friend WithEvents tbPuntos As TextBox
@@ -344,4 +354,6 @@ Partial Class nuevoMiembro
     Friend WithEvents cbDeudor As CheckBox
     Friend WithEvents dtpInscripcion As DateTimePicker
     Friend WithEvents cbDuracMemb As ComboBox
+    Friend WithEvents lbMensajeDescuento As Label
+    Friend WithEvents tbCostoTotal As TextBox
 End Class
