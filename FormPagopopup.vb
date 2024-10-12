@@ -451,7 +451,7 @@ Public Class FormPagopopup
 			Case "Inscripcion"
 
 			Case "Membresia"
-				gbInfoMiembro.Show()
+				'gbInfoMiembro.Show()
 		End Select
 
 

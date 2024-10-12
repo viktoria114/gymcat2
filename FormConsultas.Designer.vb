@@ -57,7 +57,7 @@ Partial Class FormConsultas
         GroupBox1.Controls.Add(cbCurMiembro)
         GroupBox1.Controls.Add(btnEjecutar)
         GroupBox1.Controls.Add(Panel1)
-        GroupBox1.Font = New Font("Cascadia Mono", 9.0F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        GroupBox1.Font = New Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         GroupBox1.ForeColor = Color.White
         GroupBox1.Location = New Point(28, 76)
         GroupBox1.Name = "GroupBox1"
@@ -76,6 +76,7 @@ Partial Class FormConsultas
         ' 
         ' cbCursos
         ' 
+        cbCursos.DropDownStyle = ComboBoxStyle.DropDownList
         cbCursos.FormattingEnabled = True
         cbCursos.Location = New Point(302, 157)
         cbCursos.Name = "cbCursos"
@@ -84,7 +85,9 @@ Partial Class FormConsultas
         ' 
         ' cbMejMiemb
         ' 
+        cbMejMiemb.DropDownStyle = ComboBoxStyle.DropDownList
         cbMejMiemb.FormattingEnabled = True
+        cbMejMiemb.IntegralHeight = False
         cbMejMiemb.Items.AddRange(New Object() {"1", "2", "3", "4", "5"})
         cbMejMiemb.Location = New Point(302, 121)
         cbMejMiemb.Name = "cbMejMiemb"
@@ -93,6 +96,7 @@ Partial Class FormConsultas
         ' 
         ' cbCurMiembro
         ' 
+        cbCurMiembro.DropDownStyle = ComboBoxStyle.DropDownList
         cbCurMiembro.FormattingEnabled = True
         cbCurMiembro.Location = New Point(302, 51)
         cbCurMiembro.Name = "cbCurMiembro"
@@ -103,7 +107,7 @@ Partial Class FormConsultas
         ' 
         btnEjecutar.BackColor = Color.FromArgb(CByte(239), CByte(41), CByte(84))
         btnEjecutar.FlatStyle = FlatStyle.Popup
-        btnEjecutar.Font = New Font("Cascadia Mono SemiBold", 12.0F, FontStyle.Bold)
+        btnEjecutar.Font = New Font("Cascadia Mono SemiBold", 12F, FontStyle.Bold)
         btnEjecutar.ForeColor = Color.WhiteSmoke
         btnEjecutar.Image = My.Resources.Resources.icono_flecha_derecha_grande
         btnEjecutar.ImageAlign = ContentAlignment.MiddleRight
@@ -174,7 +178,7 @@ Partial Class FormConsultas
         ' Label1
         ' 
         Label1.AutoSize = True
-        Label1.Font = New Font("Cascadia Mono SemiBold", 20.0F, FontStyle.Bold)
+        Label1.Font = New Font("Cascadia Mono SemiBold", 20F, FontStyle.Bold)
         Label1.ForeColor = SystemColors.Control
         Label1.Location = New Point(27, 21)
         Label1.Name = "Label1"
@@ -192,7 +196,7 @@ Partial Class FormConsultas
         ' 
         ' FormConsultas
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.FromArgb(CByte(33), CByte(31), CByte(45))
         ClientSize = New Size(750, 649)

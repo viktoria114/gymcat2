@@ -123,7 +123,6 @@ Public Class FormInscripciones
 		_Conexion = New Conexion(consulta, consulta2, Tabla, Tabla2)
 		_Conexion.GymcatDataSet.Tables.Add("TInscritos")
 		_Conexion.GymcatDataSet.Tables.Add("TNoInscritos")
-
 		dgvListadoMiembros.DataSource = _Conexion.vistaDatos
 		dgvListadoMiembros.Columns(0).Visible = False
 		dgvListadoMiembros.CurrentCell = dgvListadoMiembros.Rows(0).Cells(1)
@@ -131,6 +130,7 @@ Public Class FormInscripciones
 		_Conexion.miConexion.Open()
 		SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
 		ConfigurarComandos()
+		'_Conexion.miConexion.close()
 	End Sub
 
 	Private Sub ConfigurarComandos()
@@ -156,6 +156,7 @@ Public Class FormInscripciones
 
 	Private Sub FormInscripciones_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 		lbDesinscripciones.Text = vbCrLf + "Desisncripciones:"
+		cbOpciones.Text = "Nombre"
 	End Sub
 
 
@@ -169,6 +170,7 @@ Public Class FormInscripciones
 				btnGuardar.Enabled = False
 				edicion = False
 				SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+				lbInscripciones.Text = "Inscripciones:"
 			End If
 			dgvListadoMiembros.CurrentCell = PrevFila
 		Else

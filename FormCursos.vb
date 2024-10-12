@@ -8,7 +8,7 @@ Public Class FormCursos
     Private Sub FormCursos_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim consulta As String = "SELECT * FROM cursos"
         Tabla = "TCursos"
-
+        cbOpciones.Text = "Nombre"
         _Conexion = New Conexion(consulta, Tabla)
 
         dgvListadoCursos.DataSource = _Conexion.vistaDatos
@@ -40,7 +40,7 @@ Public Class FormCursos
             fila("horario") = FormCursospopup.tbHorarioCurso.Text
             fila("precio") = FormCursospopup.tbPrecioCurso.Text
             fila("dias_clase") = FormCursospopup.tbDiasCurso.Text
-            fila("FK_empleados") = FormCursospopup.tbIdTurno.Text
+            fila("FK_empleados") = FormCursospopup.tbIdProfesor.Text
             fila("turno") = FormCursospopup.tbIdTurno.Text
 
             '3. Agregar fila a la tabla del DataSet

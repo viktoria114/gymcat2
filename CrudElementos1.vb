@@ -8,6 +8,7 @@ Public Class CrudElementos1
     Private Sub CrudElementos1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim consulta As String = "SELECT * FROM `elementos deportivos`"
         Tabla = "TElementos"
+        cbOpciones.Text = "Nombre"
 
         _Conexion = New Conexion(consulta, Tabla)
 
