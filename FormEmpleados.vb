@@ -8,7 +8,7 @@ Public Class FormEmpleados
     Public Sub FormEmpleados_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim consulta As String = "SELECT * FROM empleados"
         Tabla = "TEmpleados"
-
+        cbOpciones.Text = "Nombre"
         _Conexion = New Conexion(consulta, Tabla)
 
         dgvListadoEmpleados.DataSource = _Conexion.vistaDatos

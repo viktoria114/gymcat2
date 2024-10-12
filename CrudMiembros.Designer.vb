@@ -26,7 +26,7 @@ Partial Class CrudMiembros
         Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
         dgvListadoMiembros = New DataGridView()
-        cbBuscar = New ComboBox()
+        cbOpciones = New ComboBox()
         tbBuscar = New TextBox()
         PictureBox1 = New PictureBox()
         btnAgregar = New Button()
@@ -70,14 +70,15 @@ Partial Class CrudMiembros
         dgvListadoMiembros.Size = New Size(739, 377)
         dgvListadoMiembros.TabIndex = 3
         ' 
-        ' cbBuscar
+        ' cbOpciones
         ' 
-        cbBuscar.FormattingEnabled = True
-        cbBuscar.Items.AddRange(New Object() {"Nombre", "Apellido", "DNI", "Edad", "Telefono", "Correo"})
-        cbBuscar.Location = New Point(440, 27)
-        cbBuscar.Name = "cbBuscar"
-        cbBuscar.Size = New Size(214, 24)
-        cbBuscar.TabIndex = 6
+        cbOpciones.DropDownStyle = ComboBoxStyle.DropDownList
+        cbOpciones.FormattingEnabled = True
+        cbOpciones.Items.AddRange(New Object() {"Nombre", "Apellido", "DNI", "Edad", "Telefono", "Correo"})
+        cbOpciones.Location = New Point(440, 27)
+        cbOpciones.Name = "cbOpciones"
+        cbOpciones.Size = New Size(214, 24)
+        cbOpciones.TabIndex = 6
         ' 
         ' tbBuscar
         ' 
@@ -158,7 +159,7 @@ Partial Class CrudMiembros
         ' GroupBox1
         ' 
         GroupBox1.Controls.Add(dgvListadoMiembros)
-        GroupBox1.Controls.Add(cbBuscar)
+        GroupBox1.Controls.Add(cbOpciones)
         GroupBox1.Controls.Add(tbBuscar)
         GroupBox1.Controls.Add(PictureBox1)
         GroupBox1.Font = New Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
@@ -212,7 +213,7 @@ Partial Class CrudMiembros
     Friend WithEvents btnEditar As Button
     Friend WithEvents btnBorrar As Button
     Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents cbBuscar As ComboBox
+    Friend WithEvents cbOpciones As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents tbBuscar As TextBox

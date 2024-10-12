@@ -9,7 +9,7 @@ Public Class CrudMiembros
     Private Sub CrudMiembros_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim consulta As String = "SELECT * FROM miembros"
         Tabla = "TMiembros"
-
+        cbOpciones.Text = "Nombre"
         _Conexion = New Conexion(consulta, Tabla)
 
         dgvListadoMiembros.DataSource = _Conexion.vistaDatos
@@ -138,7 +138,7 @@ Public Class CrudMiembros
 
     Private Sub Buscar() Implements ICRUD.Buscar
         ' Obtén el valor seleccionado en el ComboBox
-        Dim columnaSeleccionada = cbBuscar.SelectedItem.ToString
+        Dim columnaSeleccionada = cbOpciones.SelectedItem.ToString
 
         Select Case columnaSeleccionada
             Case "Nombre"
@@ -165,7 +165,7 @@ Public Class CrudMiembros
     Private Sub btnBorrar_Click(sender As Object, e As EventArgs) Handles btnBorrar.Click
         Borrar()
     End Sub
-    Private Sub tbBuscar_TextChanged(sender As Object, e As EventArgs)
+    Private Sub tbBuscar_TextChanged_1(sender As Object, e As EventArgs) Handles tbBuscar.TextChanged
         Buscar()
     End Sub
 
@@ -177,5 +177,6 @@ Public Class CrudMiembros
         _Conexion.TablaDataAdapter.Fill(_Conexion.GymcatDataSet.Tables(Tabla))
 
     End Sub
+
 
 End Class

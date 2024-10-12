@@ -22,18 +22,18 @@ Partial Class CrudElementos1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
         dgvListadoElementos = New DataGridView()
         GroupBox2 = New GroupBox()
+        PictureBox1 = New PictureBox()
         cbOpciones = New ComboBox()
         tbBuscar = New TextBox()
         btnAgregar = New Button()
         btnBorrar = New Button()
         btnEditar = New Button()
         Label1 = New Label()
-        PictureBox1 = New PictureBox()
         CType(dgvListadoElementos, ComponentModel.ISupportInitialize).BeginInit()
         GroupBox2.SuspendLayout()
         CType(PictureBox1, ComponentModel.ISupportInitialize).BeginInit()
@@ -43,29 +43,29 @@ Partial Class CrudElementos1
         ' 
         dgvListadoElementos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
         dgvListadoElementos.BackgroundColor = SystemColors.ButtonShadow
-        DataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = SystemColors.Control
-        DataGridViewCellStyle7.Font = New Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        DataGridViewCellStyle7.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = Color.Black
-        DataGridViewCellStyle7.WrapMode = DataGridViewTriState.True
-        dgvListadoElementos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = SystemColors.Control
+        DataGridViewCellStyle1.Font = New Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle1.ForeColor = SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = Color.Black
+        DataGridViewCellStyle1.WrapMode = DataGridViewTriState.True
+        dgvListadoElementos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         dgvListadoElementos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = SystemColors.Window
-        DataGridViewCellStyle8.Font = New Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        DataGridViewCellStyle8.ForeColor = Color.White
-        DataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = DataGridViewTriState.False
-        dgvListadoElementos.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = SystemColors.Window
+        DataGridViewCellStyle2.Font = New Font("Cascadia Mono", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        DataGridViewCellStyle2.ForeColor = Color.White
+        DataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = DataGridViewTriState.False
+        dgvListadoElementos.DefaultCellStyle = DataGridViewCellStyle2
         dgvListadoElementos.Location = New Point(19, 64)
         dgvListadoElementos.MultiSelect = False
         dgvListadoElementos.Name = "dgvListadoElementos"
         dgvListadoElementos.ReadOnly = True
-        DataGridViewCellStyle9.ForeColor = Color.Black
-        dgvListadoElementos.RowsDefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle3.ForeColor = Color.Black
+        dgvListadoElementos.RowsDefaultCellStyle = DataGridViewCellStyle3
         dgvListadoElementos.SelectionMode = DataGridViewSelectionMode.FullRowSelect
         dgvListadoElementos.Size = New Size(751, 379)
         dgvListadoElementos.TabIndex = 3
@@ -85,15 +85,25 @@ Partial Class CrudElementos1
         GroupBox2.TabStop = False
         GroupBox2.Text = "Listado de Elementos y Máquinas"
         ' 
+        ' PictureBox1
+        ' 
+        PictureBox1.Image = My.Resources.Resources.file
+        PictureBox1.Location = New Point(16, 18)
+        PictureBox1.Name = "PictureBox1"
+        PictureBox1.Size = New Size(35, 38)
+        PictureBox1.SizeMode = PictureBoxSizeMode.Zoom
+        PictureBox1.TabIndex = 12
+        PictureBox1.TabStop = False
+        ' 
         ' cbOpciones
         ' 
+        cbOpciones.DropDownStyle = ComboBoxStyle.DropDownList
         cbOpciones.FormattingEnabled = True
         cbOpciones.Items.AddRange(New Object() {"Nombre", "Modelo", "Precio", "Tipo", "Fecha de Compra", "Stock", "Marca", "Estado"})
         cbOpciones.Location = New Point(440, 27)
         cbOpciones.Name = "cbOpciones"
         cbOpciones.Size = New Size(214, 24)
         cbOpciones.TabIndex = 5
-        cbOpciones.Text = "Nombre"
         ' 
         ' tbBuscar
         ' 
@@ -160,16 +170,6 @@ Partial Class CrudElementos1
         Label1.Size = New Size(335, 35)
         Label1.TabIndex = 11
         Label1.Text = "Elementos Deportivos"
-        ' 
-        ' PictureBox1
-        ' 
-        PictureBox1.Image = My.Resources.Resources.file
-        PictureBox1.Location = New Point(16, 18)
-        PictureBox1.Name = "PictureBox1"
-        PictureBox1.Size = New Size(35, 38)
-        PictureBox1.SizeMode = PictureBoxSizeMode.Zoom
-        PictureBox1.TabIndex = 12
-        PictureBox1.TabStop = False
         ' 
         ' CrudElementos1
         ' 
