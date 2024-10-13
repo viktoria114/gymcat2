@@ -7,6 +7,7 @@ Public Class MDIPrincipal
     Sub hidesubmenu()
         PanelEmpleados.Visible = False
         PanelMembresias.Visible = False
+        PanelCursosElementos.Visible = False
     End Sub
 
 
@@ -17,6 +18,7 @@ Public Class MDIPrincipal
         btnMembresias.BackColor = Color.FromArgb(11, 7, 17)
         btnInscripciones.BackColor = Color.FromArgb(35, 32, 39)
         btnCursos.BackColor = Color.FromArgb(11, 7, 17)
+        btnElementos.BackColor = Color.FromArgb(35, 32, 39)
         btnInventario.BackColor = Color.FromArgb(11, 7, 17)
         btnFinanzas.BackColor = Color.FromArgb(11, 7, 17)
         btnConsultas.BackColor = Color.FromArgb(11, 7, 17)
@@ -64,6 +66,7 @@ Public Class MDIPrincipal
     End Sub
 
     Private Sub btnCursos_Click(sender As Object, e As EventArgs) Handles btnCursos.Click
+        mostrar_submenu(PanelCursosElementos)
         Panel4.Visible = False
         colorearBoton(btnCursos)
         FormCursos.BringToFront()
@@ -101,6 +104,11 @@ Public Class MDIPrincipal
         FormConsultas.BringToFront()
         FormConsultas.CargarDatosForm()
     End Sub
+    Private Sub btnElementos_Click_1(sender As Object, e As EventArgs) Handles btnElementos.Click
+        Panel4.Visible = False
+        colorearBoton(btnElementos)
+        FormCursosElementos.BringToFront()
+    End Sub
 
 
     Private Sub MDIPrincipal_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -121,6 +129,7 @@ Public Class MDIPrincipal
         abrirform(CrudElementos1)
         abrirform(FormConsultas)
         abrirform(FormFinanzas)
+        abrirform(FormCursosElementos)
 
         CargarUsuario()
 
@@ -176,6 +185,7 @@ Public Class MDIPrincipal
 
 
     End Sub
+
 
 End Class
 
