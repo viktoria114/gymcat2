@@ -124,6 +124,7 @@ Public Class MDIPrincipal
 
         CargarUsuario()
 
+
     End Sub
 
     Private Sub Button11_Click(sender As Object, e As EventArgs) Handles Button11.Click
@@ -155,16 +156,22 @@ Public Class MDIPrincipal
 
         Labelinfo.Text = "Información: " & vbCrLf & "Cargo: " & cargo & "              Turno: " & turno
 
-        If NivelAcceso = 2 Then
-            btnFinanzas.Hide()
-        End If
 
-        If NivelAcceso = 1 Then
+        If NivelAcceso = 3 Then
+            btnFinanzas.Show()
+            btnInventario.Show()
+            btnCursos.Show()
+            btnEmpleados.Show()
+        ElseIf NivelAcceso = 2 Then
+            btnFinanzas.Hide()
+            btnInventario.Show()
+            btnCursos.Show()
+            btnEmpleados.Show()
+        ElseIf NivelAcceso = 1 Then
             btnFinanzas.Hide()
             btnInventario.Hide()
             btnCursos.Hide()
             btnEmpleados.Hide()
-
         End If
 
 
