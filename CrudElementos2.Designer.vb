@@ -27,7 +27,6 @@ Partial Class CrudElementos2
         tbModeloElemento = New TextBox()
         tbTipoElemento = New TextBox()
         tbPrecioElemento = New TextBox()
-        tbFechaCompraElemento = New TextBox()
         Label2 = New Label()
         Label3 = New Label()
         Label4 = New Label()
@@ -42,6 +41,7 @@ Partial Class CrudElementos2
         tbDetalleElemento = New TextBox()
         tbMarcaElemento = New TextBox()
         cbEstadoElemento = New ComboBox()
+        dtpFechaCompraElemento = New DateTimePicker()
         SuspendLayout()
         ' 
         ' tbNombreElemento
@@ -82,13 +82,6 @@ Partial Class CrudElementos2
         tbPrecioElemento.Name = "tbPrecioElemento"
         tbPrecioElemento.Size = New Size(183, 23)
         tbPrecioElemento.TabIndex = 5
-        ' 
-        ' tbFechaCompraElemento
-        ' 
-        tbFechaCompraElemento.Location = New Point(193, 149)
-        tbFechaCompraElemento.Name = "tbFechaCompraElemento"
-        tbFechaCompraElemento.Size = New Size(183, 23)
-        tbFechaCompraElemento.TabIndex = 7
         ' 
         ' Label2
         ' 
@@ -229,20 +222,29 @@ Partial Class CrudElementos2
         ' 
         ' cbEstadoElemento
         ' 
+        cbEstadoElemento.DropDownStyle = ComboBoxStyle.DropDownList
         cbEstadoElemento.FormattingEnabled = True
-        cbEstadoElemento.Items.AddRange(New Object() {"Nuevo", "Bueno", "Desgastado", "Deporable", "Defectuoso*"})
+        cbEstadoElemento.Items.AddRange(New Object() {"", "Nuevo", "Bueno", "Desgastado", "Deporable", "Defectuoso*"})
         cbEstadoElemento.Location = New Point(193, 236)
         cbEstadoElemento.Name = "cbEstadoElemento"
         cbEstadoElemento.Size = New Size(183, 23)
         cbEstadoElemento.TabIndex = 24
-        cbEstadoElemento.Text = "Nuevo"
+        ' 
+        ' dtpFechaCompraElemento
+        ' 
+        dtpFechaCompraElemento.Format = DateTimePickerFormat.Short
+        dtpFechaCompraElemento.Location = New Point(193, 150)
+        dtpFechaCompraElemento.Name = "dtpFechaCompraElemento"
+        dtpFechaCompraElemento.Size = New Size(183, 23)
+        dtpFechaCompraElemento.TabIndex = 39
         ' 
         ' CrudElementos2
         ' 
-        AutoScaleDimensions = New SizeF(7.0F, 15.0F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
         BackColor = Color.FromArgb(CByte(33), CByte(31), CByte(45))
         ClientSize = New Size(399, 432)
+        Controls.Add(dtpFechaCompraElemento)
         Controls.Add(cbEstadoElemento)
         Controls.Add(tbDetalleElemento)
         Controls.Add(tbMarcaElemento)
@@ -257,7 +259,6 @@ Partial Class CrudElementos2
         Controls.Add(Label3)
         Controls.Add(Label4)
         Controls.Add(Label2)
-        Controls.Add(tbFechaCompraElemento)
         Controls.Add(tbTipoElemento)
         Controls.Add(tbPrecioElemento)
         Controls.Add(tbModeloElemento)
@@ -273,7 +274,6 @@ Partial Class CrudElementos2
     Friend WithEvents tbModeloElemento As TextBox
     Friend WithEvents tbTipoElemento As TextBox
     Friend WithEvents tbPrecioElemento As TextBox
-    Friend WithEvents tbFechaCompraElemento As TextBox
     Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
     Friend WithEvents Label4 As Label
@@ -288,4 +288,5 @@ Partial Class CrudElementos2
     Friend WithEvents tbDetalleElemento As TextBox
     Friend WithEvents tbMarcaElemento As TextBox
     Friend WithEvents cbEstadoElemento As ComboBox
+    Friend WithEvents dtpFechaCompraElemento As DateTimePicker
 End Class
