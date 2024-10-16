@@ -22,23 +22,23 @@ Partial Class FormCursosElementos
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As DataGridViewCellStyle = New DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As DataGridViewCellStyle = New DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As DataGridViewCellStyle = New DataGridViewCellStyle()
         btnInscribir = New Button()
         btnDesinscribir = New Button()
         GroupBox1 = New GroupBox()
-        dgvCursosInscritos = New DataGridView()
+        dgvElementosDentro = New DataGridView()
         GroupBox2 = New GroupBox()
-        dgvCursosDisponibles = New DataGridView()
+        dgvElementosFuera = New DataGridView()
         lbProfesorCurso = New Label()
         lbDiasCurso = New Label()
         lbPrecioCurso = New Label()
         lbHorariosCurso = New Label()
         lbCursos = New Label()
         cbOpciones = New ComboBox()
-        dgvListadoMiembros = New DataGridView()
+        dgvListadoCursos = New DataGridView()
         tbBuscar = New TextBox()
         btnGuardar = New Button()
         btnCancelar = New Button()
@@ -52,10 +52,10 @@ Partial Class FormCursosElementos
         Label1 = New Label()
         Label3 = New Label()
         GroupBox1.SuspendLayout()
-        CType(dgvCursosInscritos, ComponentModel.ISupportInitialize).BeginInit()
+        CType(dgvElementosDentro, ComponentModel.ISupportInitialize).BeginInit()
         GroupBox2.SuspendLayout()
-        CType(dgvCursosDisponibles, ComponentModel.ISupportInitialize).BeginInit()
-        CType(dgvListadoMiembros, ComponentModel.ISupportInitialize).BeginInit()
+        CType(dgvElementosFuera, ComponentModel.ISupportInitialize).BeginInit()
+        CType(dgvListadoCursos, ComponentModel.ISupportInitialize).BeginInit()
         GroupBox3.SuspendLayout()
         SuspendLayout()
         ' 
@@ -94,7 +94,7 @@ Partial Class FormCursosElementos
         ' 
         ' GroupBox1
         ' 
-        GroupBox1.Controls.Add(dgvCursosInscritos)
+        GroupBox1.Controls.Add(dgvElementosDentro)
         GroupBox1.Font = New Font("Cascadia Mono SemiBold", 9.75F, FontStyle.Bold)
         GroupBox1.ForeColor = SystemColors.ButtonHighlight
         GroupBox1.Location = New Point(38, 297)
@@ -104,27 +104,27 @@ Partial Class FormCursosElementos
         GroupBox1.TabStop = False
         GroupBox1.Text = "Cursos Inscritos"
         ' 
-        ' dgvCursosInscritos
+        ' dgvElementosDentro
         ' 
-        dgvCursosInscritos.AllowUserToAddRows = False
-        dgvCursosInscritos.AllowUserToDeleteRows = False
-        dgvCursosInscritos.AllowUserToOrderColumns = True
-        dgvCursosInscritos.AllowUserToResizeRows = False
-        dgvCursosInscritos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        dgvCursosInscritos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        dgvCursosInscritos.Location = New Point(6, 22)
-        dgvCursosInscritos.MultiSelect = False
-        dgvCursosInscritos.Name = "dgvCursosInscritos"
-        dgvCursosInscritos.ReadOnly = True
-        DataGridViewCellStyle1.ForeColor = SystemColors.ControlText
-        dgvCursosInscritos.RowsDefaultCellStyle = DataGridViewCellStyle1
-        dgvCursosInscritos.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvCursosInscritos.Size = New Size(390, 193)
-        dgvCursosInscritos.TabIndex = 0
+        dgvElementosDentro.AllowUserToAddRows = False
+        dgvElementosDentro.AllowUserToDeleteRows = False
+        dgvElementosDentro.AllowUserToOrderColumns = True
+        dgvElementosDentro.AllowUserToResizeRows = False
+        dgvElementosDentro.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        dgvElementosDentro.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvElementosDentro.Location = New Point(6, 22)
+        dgvElementosDentro.MultiSelect = False
+        dgvElementosDentro.Name = "dgvElementosDentro"
+        dgvElementosDentro.ReadOnly = True
+        DataGridViewCellStyle5.ForeColor = SystemColors.ControlText
+        dgvElementosDentro.RowsDefaultCellStyle = DataGridViewCellStyle5
+        dgvElementosDentro.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        dgvElementosDentro.Size = New Size(390, 193)
+        dgvElementosDentro.TabIndex = 0
         ' 
         ' GroupBox2
         ' 
-        GroupBox2.Controls.Add(dgvCursosDisponibles)
+        GroupBox2.Controls.Add(dgvElementosFuera)
         GroupBox2.Font = New Font("Cascadia Mono SemiBold", 9.75F, FontStyle.Bold)
         GroupBox2.ForeColor = SystemColors.ButtonHighlight
         GroupBox2.Location = New Point(606, 297)
@@ -134,22 +134,22 @@ Partial Class FormCursosElementos
         GroupBox2.TabStop = False
         GroupBox2.Text = "Cursos Disponibes"
         ' 
-        ' dgvCursosDisponibles
+        ' dgvElementosFuera
         ' 
-        dgvCursosDisponibles.AllowUserToAddRows = False
-        dgvCursosDisponibles.AllowUserToDeleteRows = False
-        dgvCursosDisponibles.AllowUserToResizeRows = False
-        dgvCursosDisponibles.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        dgvCursosDisponibles.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        dgvCursosDisponibles.Location = New Point(6, 22)
-        dgvCursosDisponibles.MultiSelect = False
-        dgvCursosDisponibles.Name = "dgvCursosDisponibles"
-        dgvCursosDisponibles.ReadOnly = True
-        DataGridViewCellStyle2.ForeColor = SystemColors.ControlText
-        dgvCursosDisponibles.RowsDefaultCellStyle = DataGridViewCellStyle2
-        dgvCursosDisponibles.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvCursosDisponibles.Size = New Size(177, 193)
-        dgvCursosDisponibles.TabIndex = 0
+        dgvElementosFuera.AllowUserToAddRows = False
+        dgvElementosFuera.AllowUserToDeleteRows = False
+        dgvElementosFuera.AllowUserToResizeRows = False
+        dgvElementosFuera.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        dgvElementosFuera.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvElementosFuera.Location = New Point(6, 22)
+        dgvElementosFuera.MultiSelect = False
+        dgvElementosFuera.Name = "dgvElementosFuera"
+        dgvElementosFuera.ReadOnly = True
+        DataGridViewCellStyle6.ForeColor = SystemColors.ControlText
+        dgvElementosFuera.RowsDefaultCellStyle = DataGridViewCellStyle6
+        dgvElementosFuera.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        dgvElementosFuera.Size = New Size(177, 193)
+        dgvElementosFuera.TabIndex = 0
         ' 
         ' lbProfesorCurso
         ' 
@@ -221,31 +221,31 @@ Partial Class FormCursosElementos
         cbOpciones.Size = New Size(186, 23)
         cbOpciones.TabIndex = 25
         ' 
-        ' dgvListadoMiembros
+        ' dgvListadoCursos
         ' 
-        dgvListadoMiembros.AllowUserToAddRows = False
-        dgvListadoMiembros.AllowUserToDeleteRows = False
-        dgvListadoMiembros.AllowUserToResizeRows = False
-        dgvListadoMiembros.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
-        dgvListadoMiembros.BackgroundColor = SystemColors.ButtonShadow
-        DataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = SystemColors.Control
-        DataGridViewCellStyle3.Font = New Font("Segoe UI", 9F)
-        DataGridViewCellStyle3.ForeColor = SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = Color.Black
-        DataGridViewCellStyle3.WrapMode = DataGridViewTriState.True
-        dgvListadoMiembros.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
-        dgvListadoMiembros.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        dgvListadoMiembros.Location = New Point(30, 123)
-        dgvListadoMiembros.MultiSelect = False
-        dgvListadoMiembros.Name = "dgvListadoMiembros"
-        dgvListadoMiembros.ReadOnly = True
-        DataGridViewCellStyle4.ForeColor = Color.Black
-        dgvListadoMiembros.RowsDefaultCellStyle = DataGridViewCellStyle4
-        dgvListadoMiembros.SelectionMode = DataGridViewSelectionMode.FullRowSelect
-        dgvListadoMiembros.Size = New Size(570, 168)
-        dgvListadoMiembros.TabIndex = 6
+        dgvListadoCursos.AllowUserToAddRows = False
+        dgvListadoCursos.AllowUserToDeleteRows = False
+        dgvListadoCursos.AllowUserToResizeRows = False
+        dgvListadoCursos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
+        dgvListadoCursos.BackgroundColor = SystemColors.ButtonShadow
+        DataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = SystemColors.Control
+        DataGridViewCellStyle7.Font = New Font("Segoe UI", 9F)
+        DataGridViewCellStyle7.ForeColor = SystemColors.WindowText
+        DataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = Color.Black
+        DataGridViewCellStyle7.WrapMode = DataGridViewTriState.True
+        dgvListadoCursos.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
+        dgvListadoCursos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        dgvListadoCursos.Location = New Point(30, 123)
+        dgvListadoCursos.MultiSelect = False
+        dgvListadoCursos.Name = "dgvListadoCursos"
+        dgvListadoCursos.ReadOnly = True
+        DataGridViewCellStyle8.ForeColor = Color.Black
+        dgvListadoCursos.RowsDefaultCellStyle = DataGridViewCellStyle8
+        dgvListadoCursos.SelectionMode = DataGridViewSelectionMode.FullRowSelect
+        dgvListadoCursos.Size = New Size(570, 168)
+        dgvListadoCursos.TabIndex = 6
         ' 
         ' tbBuscar
         ' 
@@ -402,7 +402,7 @@ Partial Class FormCursosElementos
         Controls.Add(btnAumentarMeses)
         Controls.Add(btnReducirMeses)
         Controls.Add(tbMeses)
-        Controls.Add(dgvListadoMiembros)
+        Controls.Add(dgvListadoCursos)
         Controls.Add(cbOpciones)
         Controls.Add(tbBuscar)
         Controls.Add(lbProfesorCurso)
@@ -420,10 +420,10 @@ Partial Class FormCursosElementos
         Name = "FormCursosElementos"
         Text = "Form2"
         GroupBox1.ResumeLayout(False)
-        CType(dgvCursosInscritos, ComponentModel.ISupportInitialize).EndInit()
+        CType(dgvElementosDentro, ComponentModel.ISupportInitialize).EndInit()
         GroupBox2.ResumeLayout(False)
-        CType(dgvCursosDisponibles, ComponentModel.ISupportInitialize).EndInit()
-        CType(dgvListadoMiembros, ComponentModel.ISupportInitialize).EndInit()
+        CType(dgvElementosFuera, ComponentModel.ISupportInitialize).EndInit()
+        CType(dgvListadoCursos, ComponentModel.ISupportInitialize).EndInit()
         GroupBox3.ResumeLayout(False)
         GroupBox3.PerformLayout()
         ResumeLayout(False)
@@ -441,12 +441,12 @@ Partial Class FormCursosElementos
     Friend WithEvents lbHorariosCurso As Label
     Friend WithEvents lbCursos As Label
     Friend WithEvents cbOpciones As ComboBox
-    Friend WithEvents dgvListadoMiembros As DataGridView
+    Friend WithEvents dgvListadoCursos As DataGridView
     Friend WithEvents tbBuscar As TextBox
     Friend WithEvents btnGuardar As Button
     Friend WithEvents btnCancelar As Button
-    Friend WithEvents dgvCursosDisponibles As DataGridView
-    Friend WithEvents dgvCursosInscritos As DataGridView
+    Friend WithEvents dgvElementosFuera As DataGridView
+    Friend WithEvents dgvElementosDentro As DataGridView
     Friend WithEvents GroupBox3 As GroupBox
     Friend WithEvents lbDesinscripciones As Label
     Friend WithEvents Label2 As Label
