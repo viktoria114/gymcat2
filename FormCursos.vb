@@ -37,11 +37,11 @@ Public Class FormCursos
             fila = _Conexion.GymcatDataSet.Tables(Tabla).NewRow
             '2. Rellenar la fila con información
             fila("nombre") = FormCursospopup.tbNombreCurso.Text
-            fila("horario") = FormCursospopup.tbHorarioCurso.Text
+            fila("horario") = FormCursospopup.cbDesde.Text & " " & FormCursospopup.cbHasta.Text
             fila("precio") = FormCursospopup.tbPrecioCurso.Text
             fila("dias_clase") = FormCursospopup.tbDiasCurso.Text
             fila("FK_empleados") = FormCursospopup.tbIdProfesor.Text
-            fila("turno") = FormCursospopup.tbIdTurno.Text
+            fila("turno") = FormCursospopup.cbTurno.Text
 
             '3. Agregar fila a la tabla del DataSet
             _Conexion.GymcatDataSet.Tables(Tabla).Rows.Add(fila)
@@ -68,11 +68,11 @@ Public Class FormCursos
 
             '2. Rellenar la fila con información
             fila("nombre") = FormCursospopup.tbNombreCurso.Text
-            fila("horario") = FormCursospopup.tbHorarioCurso.Text
+            fila("horario") = FormCursospopup.cbDesde.Text & " " & FormCursospopup.cbHasta.Text
             fila("precio") = FormCursospopup.tbPrecioCurso.Text
             fila("dias_clase") = FormCursospopup.tbDiasCurso.Text
             fila("FK_empleados") = FormCursospopup.tbIdProfesor.Text
-            fila("turno") = FormCursospopup.tbIdTurno.Text
+            fila("turno") = FormCursospopup.cbTurno.Text
 
             '3. Crear el comando para odificar la Fila
             cmd = "UPDATE cursos 
