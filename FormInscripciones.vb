@@ -10,9 +10,11 @@ Public Class FormInscripciones
 	Public Tabla As String = "TMiembros"
 	Public Tabla2 As String = "TInscripciones"
 	Private lector As MySqlDataReader
+	Private lector1 As MySqlDataReader
 	Private edicion As Boolean = False
 	Private PrevFila As DataGridViewCell
 	Private PopUp As FormPagopopup
+	Public miConexion As MySqlConnection
 
 	Public Shared listaIns As New List(Of Curso_Pago)
 
@@ -61,11 +63,37 @@ Public Class FormInscripciones
 			edicion = True
 			_Conexion.GymcatDataSet.Tables(Tabla2).Rows.Find(FilaCurso.Cells(0).Value).Delete()
 
+			Dim cursoactual = FilaCurso.Cells(1).Value.ToString
+
 			btnCancelar.Enabled = True
 			btnGuardar.Enabled = True
 			lbDesinscripciones.Visible = True
 			lbDesinscripciones.Text += vbCrLf + "    - " + FilaCurso.Cells(1).Value.ToString
 			SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+
+			miConexion = New MySqlConnection("Server=localhost; Database=gymcat; Uid=root; Pwd=;")
+			miConexion.Open()
+			Dim consulta = "SELECT * FROM cursos WHERE cursos.nombre=@cursos"
+			Dim consulta1 = "SELECT * FROM miembros WHERE ID_miembro=@id
+			"
+
+			Dim comando As New MySqlCommand(consulta, miConexion)
+			Dim comando1 As New MySqlCommand(consulta1, miConexion)
+			comando.Parameters.AddWithValue("@cursos", cursoactual)
+			comando1.Parameters.AddWithValue("@id", dgvListadoMiembros.CurrentRow.Cells(0).Value)
+
+			lector = comando.ExecuteReader
+
+			lector.Read()
+			Dim precio = lector("precio")
+			lector.Close()
+			lector1 = comando1.ExecuteReader
+
+			lector1.Read()
+
+			Dim fila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla).Rows.Find(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+
+			fila("costo_total") = lector1("costo_total") - precio
 		End If
 
 	End Sub
@@ -75,6 +103,8 @@ Public Class FormInscripciones
 
 		If (MessageBox.Show("¿Quiere inscribir al miembro " + dgvListadoMiembros.CurrentRow.Cells(1).Value.ToString + "al Curso " +
 			FilaCurso.Cells(1).Value.ToString + "?", "Inscribir Miembro", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.OK) Then
+
+			Dim cursoactual = FilaCurso.Cells(1).Value.ToString
 
 			edicion = True
 			Dim NuevaFila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla2).NewRow
@@ -90,6 +120,32 @@ Public Class FormInscripciones
 			lbInscripciones.Text += vbCrLf + "    - " + FilaCurso.Cells(1).Value.ToString
 			listaIns.Add(New Curso_Pago(FilaCurso.Cells(0).Value, FilaCurso.Cells(1).Value.ToString, FilaCurso.Cells(2).Value, tbMeses.Text))
 			SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+
+			miConexion = New MySqlConnection("Server=localhost; Database=gymcat; Uid=root; Pwd=;")
+			miConexion.Open()
+			Dim consulta = "SELECT * FROM cursos WHERE cursos.nombre=@cursos"
+			Dim consulta1 = "SELECT * FROM miembros WHERE ID_miembro=@id
+			"
+
+			Dim comando As New MySqlCommand(consulta, miConexion)
+			Dim comando1 As New MySqlCommand(consulta1, miConexion)
+			comando.Parameters.AddWithValue("@cursos", cursoactual)
+			comando1.Parameters.AddWithValue("@id", dgvListadoMiembros.CurrentRow.Cells(0).Value)
+
+			lector = comando.ExecuteReader
+
+			lector.Read()
+			Dim precio = lector("precio")
+			lector.Close()
+			lector1 = comando1.ExecuteReader
+
+			lector1.Read()
+
+			Dim fila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla).Rows.Find(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+
+			fila("costo_total") = lector1("costo_total") + precio
+
+
 		End If
 	End Sub
 
@@ -117,7 +173,7 @@ Public Class FormInscripciones
 
 
 	Public Sub CargarDatosForm()
-		Dim consulta As String = "SELECT ID_miembro, nombre AS Nombre, apellido AS Apellido, DNI FROM miembros"
+		Dim consulta As String = "SELECT ID_miembro, nombre AS Nombre, apellido AS Apellido, DNI, costo_total FROM miembros"
 		Dim consulta2 As String = "SELECT * FROM miembros_cursos"
 
 		_Conexion = New Conexion(consulta, consulta2, Tabla, Tabla2)
@@ -125,6 +181,7 @@ Public Class FormInscripciones
 		_Conexion.GymcatDataSet.Tables.Add("TNoInscritos")
 		dgvListadoMiembros.DataSource = _Conexion.vistaDatos
 		dgvListadoMiembros.Columns(0).Visible = False
+		dgvListadoMiembros.Columns(4).Visible = False
 		dgvListadoMiembros.CurrentCell = dgvListadoMiembros.Rows(0).Cells(1)
 
 		_Conexion.miConexion.Open()
@@ -149,6 +206,10 @@ Public Class FormInscripciones
 		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@fe", MySqlDbType.Date, 10, "Fecha_Inscripcion")
 		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@mes", MySqlDbType.Int32, 0, "Meses")
 		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int32, 0, "ID_inscripción")
+
+		_Conexion.TablaDataAdapter.UpdateCommand = New MySqlCommand("UPDATE miembros SET costo_total=@cost WHERE ID_miembro = @id", _Conexion.miConexion)
+		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@cost", MySqlDbType.Int32, 0, "costo_total")
+		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int32, 0, "ID_miembro")
 
 	End Sub
 
@@ -231,11 +292,14 @@ Public Class FormInscripciones
 		If (MessageBox.Show("Desea Guardar las Inscripciones realizadas?", "Guardar Cambios",
 				MessageBoxButtons.YesNo) = DialogResult.Yes) Then
 
+
 			If listaIns.Count <> 0 Then
 				PopUp = New FormPagopopup(listaIns, dgvListadoMiembros.CurrentRow.Cells(3).Value.ToString)
 				PopUp.ShowDialog()
+
 			End If
 			_Conexion.TablaDataAdapter.Update(_Conexion.GymcatDataSet.Tables(Tabla2))
+			_Conexion.TablaDataAdapter.Update(_Conexion.GymcatDataSet.Tables(Tabla))
 			btnGuardar.Enabled = False
 			btnCancelar.Enabled = False
 			edicion = False

@@ -221,10 +221,10 @@ Public Class FormConsultas
                     Dim tipo As String = lector("tipo").ToString()
 
                     If tipo = "Ingreso" Then
-                            total += monto
-                        ElseIf tipo = "Gasto" Then
-                            total -= monto
-                        End If
+                        total += monto
+                    ElseIf tipo = "Gasto" Then
+                        total -= monto
+                    End If
                 End While
                 tbBeneficios.Text = total
 

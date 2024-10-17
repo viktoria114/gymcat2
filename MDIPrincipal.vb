@@ -54,6 +54,9 @@ Public Class MDIPrincipal
         Panel4.Visible = False
         colorearBoton(btnEmpleados)
         FormEmpleados.BringToFront()
+
+        FormEmpleados._Conexion.GymcatDataSet.Tables(FormEmpleados.Tabla).Clear()
+        FormEmpleados._Conexion.TablaDataAdapter.Fill(FormEmpleados._Conexion.GymcatDataSet.Tables(FormEmpleados.Tabla))
     End Sub
 
     Private Sub brnMembresias_Click(sender As Object, e As EventArgs) Handles btnMembresias.Click
@@ -61,18 +64,32 @@ Public Class MDIPrincipal
         Panel4.Visible = False
         colorearBoton(btnMembresias)
         CrudMiembros.BringToFront()
+
+        CrudMiembros._Conexion.GymcatDataSet.Tables(CrudMiembros.Tabla).Clear()
+        CrudMiembros._Conexion.TablaDataAdapter.Fill(CrudMiembros._Conexion.GymcatDataSet.Tables(CrudMiembros.Tabla))
     End Sub
 
     Private Sub btnCursos_Click(sender As Object, e As EventArgs) Handles btnCursos.Click
         Panel4.Visible = False
         colorearBoton(btnCursos)
         FormCursos.BringToFront()
+
+        FormCursos._Conexion.GymcatDataSet.Tables(FormCursos.Tabla).Clear()
+        FormCursos._Conexion.TablaDataAdapter.Fill(FormCursos._Conexion.GymcatDataSet.Tables(FormCursos.Tabla))
     End Sub
 
     Private Sub btnFinanzas_Click(sender As Object, e As EventArgs) Handles btnFinanzas.Click
         Panel4.Visible = False
         colorearBoton(btnFinanzas)
         FormFinanzas.BringToFront()
+
+        FormFinanzas._Conexion.TablaDataAdapter.SelectCommand = New MySqlCommand("SELECT * FROM ingresos", FormFinanzas._Conexion.miConexion)
+        FormFinanzas._Conexion.GymcatDataSet.Tables(FormFinanzas.Tabla).Clear()
+        FormFinanzas._Conexion.TablaDataAdapter.Fill(FormFinanzas._Conexion.GymcatDataSet.Tables(FormFinanzas.Tabla))
+
+        FormFinanzas._Conexion.TablaDataAdapter.SelectCommand = New MySqlCommand("SELECT * FROM gastos", FormFinanzas._Conexion.miConexion)
+        FormFinanzas._Conexion.GymcatDataSet.Tables(FormFinanzas.Tabla2).Clear()
+        FormFinanzas._Conexion.TablaDataAdapter.Fill(FormFinanzas._Conexion.GymcatDataSet.Tables(FormFinanzas.Tabla2))
 
     End Sub
 
@@ -93,6 +110,9 @@ Public Class MDIPrincipal
         Panel4.Visible = False
         colorearBoton(btnInventario)
         CrudElementos1.BringToFront()
+
+        CrudElementos1._Conexion.GymcatDataSet.Tables(CrudElementos1.Tabla).Clear()
+        CrudElementos1._Conexion.TablaDataAdapter.Fill(CrudElementos1._Conexion.GymcatDataSet.Tables(CrudElementos1.Tabla))
     End Sub
 
     Private Sub btnConsultas_Click(sender As Object, e As EventArgs) Handles btnConsultas.Click
