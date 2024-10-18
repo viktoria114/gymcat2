@@ -54,7 +54,7 @@ Public Class CrudMiembros
             '4. Crear Comando para agregar a la BD la fila nueva cmd
             cmd = "INSERT INTO miembros (DNI, nombre, apellido, edad, fecha_inscripcion, duracion_membresia, costo_total, deudor, telefono, correo, puntos) VALUES (@dni, @nom, @ape, @edad, @fec, @dur, @cos, @deu, @tel, @cor, @pun)"
             _Conexion.TablaDataAdapter.InsertCommand = New MySqlCommand(cmd, _Conexion.miConexion)
-            _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@dni", MySqlDbType.Int32, 10, "DNI")
+            _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@dni", MySqlDbType.Int32, 50, "DNI")
             _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@nom", MySqlDbType.VarChar, 45, "nombre")
             _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@ape", MySqlDbType.VarChar, 45, "apellido")
             _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@edad", MySqlDbType.Int32, 5, "edad")
@@ -62,7 +62,7 @@ Public Class CrudMiembros
             _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@dur", MySqlDbType.VarChar, 20, "duracion_membresia")
             _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@cos", MySqlDbType.Int32, 20, "costo_total")
             _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@deu", MySqlDbType.Int32, 10, "deudor")
-            _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@tel", MySqlDbType.VarChar, 40, "telefono")
+            _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@tel", MySqlDbType.VarChar, 100, "telefono")
             _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@cor", MySqlDbType.VarChar, 50, "correo")
             _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@pun", MySqlDbType.Int32, 50, "puntos")
 
@@ -104,10 +104,10 @@ Public Class CrudMiembros
             _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@dur", MySqlDbType.VarChar, 20, "duracion_membresia")
             _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@cos", MySqlDbType.Int32, 20, "costo_total")
             _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@deu", MySqlDbType.Int32, 10, "deudor")
-            _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@tel", MySqlDbType.VarChar, 40, "telefono")
+            _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@tel", MySqlDbType.VarChar, 100, "telefono")
             _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@cor", MySqlDbType.VarChar, 50, "correo")
             _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@pun", MySqlDbType.Int32, 50, "puntos")
-            _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@dni", MySqlDbType.Int32, 10, "DNI")
+            _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@dni", MySqlDbType.Int32, 50, "DNI")
             _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int32, 10, "ID_miembro")
 
             '4. Guardar los cambios en la base de datos
@@ -150,7 +150,7 @@ Public Class CrudMiembros
             Case "Edad"
                 _Conexion.vistaDatos.RowFilter = String.Format("CONVERT({0}, System.String) like '%{1}%'", "edad", tbBuscar.Text)
             Case "Telefono"
-                _Conexion.vistaDatos.RowFilter = String.Format("CONVERT({0}, System.String) like '%{1}%'", "telefono", tbBuscar.Text)
+                _Conexion.vistaDatos.RowFilter = "telefono LIKE '" + tbBuscar.Text + "%'"
             Case "Correo"
                 _Conexion.vistaDatos.RowFilter = "correo LIKE '" + tbBuscar.Text + "%'"
         End Select
