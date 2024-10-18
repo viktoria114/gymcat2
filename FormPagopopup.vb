@@ -185,11 +185,11 @@ Public Class FormPagopopup
 				PanelMeses.Hide()
 				Label7.Hide()
 				dgvFactura.Hide()
-				If TipoMov = "Ingreso" Then
-					btnPagar.Location = New Point(62, 6)
-				ElseIf TipoMov = "Egreso" Then
-					btnPagar.Location = New Point(165, 6)
-				End If
+				'If TipoMov = "Ingreso" Then
+				'	btnPagar.Location = New Point(62, 6)
+				'ElseIf TipoMov = "Egreso" Then
+				'	btnPagar.Location = New Point(165, 6)
+				'End If
 				'btnPagar.Location = New Point(82, 314)
 				'btnImprimir.Location = New Point(214, 314)
 				'Me.Height = 478
