@@ -41,7 +41,7 @@ Public Class CrudElementos1
             fila("modelo") = CrudElementos2.tbModeloElemento.Text
             fila("precio") = CrudElementos2.tbPrecioElemento.Text
             fila("tipo") = CrudElementos2.tbTipoElemento.Text
-            fila("fecha_compra") = CrudElementos2.tbFechaCompraElemento.Text
+            fila("fecha_compra") = CrudElementos2.dtpFechaCompraElemento.Text
             fila("stock") = CrudElementos2.tbStockElemeto.Text
             fila("marca") = CrudElementos2.tbMarcaElemento.Text
             fila("estado") = CrudElementos2.cbEstadoElemento.Text
@@ -78,7 +78,7 @@ Public Class CrudElementos1
             fila("modelo") = CrudElementos2.tbModeloElemento.Text
             fila("precio") = CrudElementos2.tbPrecioElemento.Text
             fila("tipo") = CrudElementos2.tbTipoElemento.Text
-            fila("fecha_compra") = CrudElementos2.tbFechaCompraElemento.Text
+            fila("fecha_compra") = CrudElementos2.dtpFechaCompraElemento.Text
             fila("stock") = CrudElementos2.tbStockElemeto.Text
             fila("marca") = CrudElementos2.tbMarcaElemento.Text
             fila("estado") = CrudElementos2.cbEstadoElemento.Text

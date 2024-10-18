@@ -6,7 +6,7 @@
             tbModeloElemento.Text = ""
             tbPrecioElemento.Text = ""
             tbTipoElemento.Text = ""
-            tbFechaCompraElemento.Text = ""
+            dtpFechaCompraElemento.Text = Today
             tbStockElemeto.Text = ""
             tbMarcaElemento.Text = ""
             cbEstadoElemento.Text = ""
@@ -19,7 +19,7 @@
             tbModeloElemento.Text = fila.Cells(2).Value
             tbPrecioElemento.Text = fila.Cells(3).Value
             tbTipoElemento.Text = fila.Cells(4).Value
-            tbFechaCompraElemento.Text = fila.Cells(5).Value
+            dtpFechaCompraElemento.Text = fila.Cells(5).Value
             tbStockElemeto.Text = fila.Cells(6).Value
             tbMarcaElemento.Text = fila.Cells(7).Value
             cbEstadoElemento.Text = fila.Cells(8).Value
