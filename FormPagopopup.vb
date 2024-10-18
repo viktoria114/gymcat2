@@ -154,10 +154,13 @@ Public Class FormPagopopup
 				'cbMiembros.ValueMember = "ID_miembro"
 
 			Case "Inscripcion"
-				cbMiembros.Items.Add(NomCompleto)
+				gbInfoMiembro.Hide()
+
+				cbMiembros.Text = NomCompleto
 				cbMiembros.Enabled = False
 
-				Cuota()
+				lbTitulo.Text = "Inscripción a Cursos, ID " + IDMovActual.ToString
+
 
 			Case "Membresia"
 
@@ -183,10 +186,8 @@ Public Class FormPagopopup
 				Label7.Hide()
 				dgvFactura.Hide()
 				If TipoMov = "Ingreso" Then
-					btnImprimir.Show()
 					btnPagar.Location = New Point(62, 6)
 				ElseIf TipoMov = "Egreso" Then
-					btnImprimir.Hide()
 					btnPagar.Location = New Point(165, 6)
 				End If
 				'btnPagar.Location = New Point(82, 314)
@@ -247,6 +248,16 @@ Public Class FormPagopopup
 				End If
 
 			Case "Inscripcion"
+				If cbMeses.Text = "" Then
+					MsgBox("Elegir cantidad de meses!")
+				Else
+
+					ActualizarIngresos("Inscripción a Cursos")
+					Me.Close()
+					FormFinanzas.actualizardvg()
+					actualizarMiembroMesIngreso()
+				End If
+
 
 			Case "Membresia"
 				If cbMeses.Text = "" Then
@@ -311,31 +322,51 @@ Public Class FormPagopopup
 		Dim precio As Integer = 15000 * cbMeses.Text
 
 		Dim n = dgvFactura.Rows.Add
-		dgvFactura.Rows(n).Cells(0).Value = "Membresia"
-		dgvFactura.Rows(n).Cells(1).Value = precio.ToString
-		dgvFactura.Rows(n).Cells(2).Value = "*" + cbMeses.Text + " mes/es"
 
-		cursos()
+		total = 0
 
-		miConexion.Open()
-		Dim comando As New MySqlCommand("SELECT costo_total FROM miembros
+		Select Case Modo
+
+			Case "Membresia"
+				dgvFactura.Rows(n).Cells(0).Value = "Membresia"
+				dgvFactura.Rows(n).Cells(1).Value = nuevoMiembro.tbCostoTotal.Text.ToString
+				dgvFactura.Rows(n).Cells(2).Value = "*" + cbMeses.Text + " mes/es"
+				total = nuevoMiembro.tbCostoTotal.Text * cbMeses.Text
+			Case "Cuota"
+				dgvFactura.Rows(n).Cells(0).Value = "Membresia"
+				dgvFactura.Rows(n).Cells(1).Value = precio.ToString
+				dgvFactura.Rows(n).Cells(2).Value = "*" + cbMeses.Text + " mes/es"
+
+				cursos()
+
+				miConexion.Open()
+				Dim comando As New MySqlCommand("SELECT costo_total FROM miembros
 					WHERE miembros.DNI = @dni
                                         ", _Conexion.miConexion)
-		comando.Parameters.AddWithValue("@dni", DNI_Miembro)
+				comando.Parameters.AddWithValue("@dni", DNI_Miembro)
 
-		Dim lector = comando.ExecuteReader
-		lector.Read()
+				Dim lector = comando.ExecuteReader
+				lector.Read()
 
-		total = lector("costo_total") * cbMeses.Text
+				total = lector("costo_total") * cbMeses.Text
+
+				lector.Close()
+				miConexion.Close()
+			Case "Inscripcion"
+				cursosapagar(FormInscripciones.cursoactual)
+
+
+
+		End Select
+
 
 		dgvFactura.Rows.Add()
 		n = dgvFactura.Rows.Add
 		dgvFactura.Rows(n).Cells(0).Value = "Total"
-		dgvFactura.Rows(n).Cells(1).Value = total.ToString
+		dgvFactura.Rows(n).Cells(1).Value = total * cbMeses.Text
 		dgvFactura.Rows(n).Cells(2).Value = "*" + cbMeses.Text + " mes/es"
 
-		lector.Close()
-		miConexion.Close()
+
 
 	End Sub
 
@@ -442,163 +473,27 @@ Public Class FormPagopopup
 		_Conexion.TablaDataAdapter.Update(_Conexion.GymcatDataSet.Tables(Tabla))
 	End Sub
 
-	Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
-		Select Case Modo
-			Case "Generico"
+	Public Sub cursosapagar(curso)
+		miConexion.Open()
+		Dim comando As New MySqlCommand("SELECT * FROM cursos
+ c where " + FormInscripciones.ListCursos, _Conexion.miConexion)
 
-			Case "Cuota"
-				gbInfoMiembro.Show()
-			Case "Inscripcion"
+		Dim lector = comando.ExecuteReader
 
-			Case "Membresia"
-				'gbInfoMiembro.Show()
-		End Select
+		If lector.HasRows Then
+			While lector.Read()
+				Dim n As Integer = dgvFactura.Rows.Add()
+				dgvFactura.Rows(n).Cells(0).Value = lector("nombre")
+				dgvFactura.Rows(n).Cells(1).Value = lector("precio") * cbMeses.Text
+				dgvFactura.Rows(n).Cells(2).Value = "*" + cbMeses.Text + " mes/es"
+				total += lector("precio")
+			End While
+		End If
 
+		lector.Close()
+		miConexion.Close()
 
 	End Sub
-
-
-
-
-	'Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
-	'	Dim pdfWriter As New PdfWriter("C:\Users\Gaming\Desktop\GYMCAT_Factura.pdf")
-	'	Dim pdfDoc As New PdfDocument(pdfWriter)
-	'	Dim document As New iText.Layout.Document(pdfDoc)
-
-	'	' Agregar una fuente estándar
-	'	Dim font As PdfFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA)
-
-	'	' Agregar el título
-	'	Dim titulo As New Paragraph("FACTURA DE PAGO DE CUOTA - GYMCAT")
-	'	titulo.SetFont(font).SetFontSize(20).SetTextAlignment(TextAlignment.CENTER)
-	'	document.Add(titulo)
-
-	'	Dim linea As LineSeparator = New LineSeparator(New SolidLine())
-	'	document.Add(linea)
-
-	'	' Agregar el logo del gimnasio
-	'	Dim imagen As New Image(ImageDataFactory.Create("C:\Users\Gaming\Documents\GitHub\GYMCAT\GYMCAT - SI\Resources\image-removebg-preview (1).png"))
-	'	imagen.ScaleAbsolute(66, 70)
-	'	imagen.SetFixedPosition(40, 695)
-	'	document.Add(imagen)
-
-	'	' Información del gimnasio
-	'	Dim infoGym As New Paragraph("GYMCAT S.A." & vbCrLf & "Dirección: Calle Falsa 123" & vbCrLf & "Teléfono: (123) 4567890")
-	'	infoGym.SetFont(font).SetFontSize(12).SetMarginTop(16).SetMarginLeft(80)
-	'	document.Add(infoGym)
-
-	'	' Fecha y forma de pago
-	'	Dim pagoInfo As New Paragraph("Fecha: " & dtpFechaMov.Text & vbCrLf & "Forma de pago: " & cbFormaPago.Text)
-	'	pagoInfo.SetFont(font).SetFontSize(12).SetMarginTop(20)
-	'	document.Add(pagoInfo)
-
-	'	' Información del cliente/miembro
-	'	Dim cliente As New Paragraph("Miembro: " + Nombre_Miembro + vbCrLf + "DNI: " + DNI_Miebro + vbCrLf + "Correo: " + Correo_Miembro)
-	'	cliente.SetFont(font).SetFontSize(12).SetMarginTop(20)
-	'	document.Add(cliente)
-
-	'	' Tabla de detalles de los cursos
-	'	Dim table As New iText.Layout.Element.Table(UnitValue.CreatePercentArray(New Single() {3, 1, 1, 1})) ' Ajustar proporciones de columnas
-	'	table.SetWidth(UnitValue.CreatePercentValue(80)) ' Reducir el tamaño de la tabla
-
-	'	' Agregar las cabeceras de columna
-	'	table.AddHeaderCell(New Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY).Add(New Paragraph("Curso").SetTextAlignment(TextAlignment.CENTER).SetBold()))
-	'	table.AddHeaderCell(New Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY).Add(New Paragraph("Cantidad de meses").SetTextAlignment(TextAlignment.CENTER).SetBold()))
-	'	table.AddHeaderCell(New Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY).Add(New Paragraph("Costo").SetTextAlignment(TextAlignment.CENTER).SetBold()))
-	'	table.AddHeaderCell(New Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY).Add(New Paragraph("Total").SetTextAlignment(TextAlignment.CENTER).SetBold()))
-
-	'	' Agregar las filas de datos
-	'	Dim total As Decimal = 0
-	'	For Each row As Curso_Pago In ListaInscripciones
-	'		Dim cantidadMeses As Integer = row.Meses
-	'		Dim costoPorMes As Decimal = Convert.ToDecimal(row.Precio)
-	'		Dim totalPorCurso As Decimal = cantidadMeses * costoPorMes
-
-	'		table.AddCell(New Cell().Add(New Paragraph(row.Nombre).SetTextAlignment(TextAlignment.CENTER)))
-	'		table.AddCell(New Cell().Add(New Paragraph(cantidadMeses.ToString()).SetTextAlignment(TextAlignment.CENTER)))
-	'		table.AddCell(New Cell().Add(New Paragraph(costoPorMes.ToString("C")).SetTextAlignment(TextAlignment.CENTER)))
-	'		table.AddCell(New Cell().Add(New Paragraph(totalPorCurso.ToString("C")).SetTextAlignment(TextAlignment.CENTER)))
-
-	'		total += totalPorCurso
-	'	Next
-	'	document.Add(table)
-
-	'	'Agregar el total
-	'	Dim ptotal As New Paragraph("Total: " & total.ToString("C"))
-	'	ptotal.SetFont(font).SetFontSize(15).SetFontColor(ColorConstants.RED).SetTextAlignment(TextAlignment.RIGHT).SetMarginTop(20)
-	'	document.Add(ptotal)
-
-	'	document.Close()
-	'	MsgBox("Factura generada exitosamente.")
-	'End Sub
-
-
-	'	Private Sub btnImprimir_Click(sender As Object, e As EventArgs) Handles btnImprimir.Click
-	'		Dim pdfWriter As New PdfWriter("C:\Users\Gaming\Desktop\GYMCAT_Factura.pdf")
-	'		Dim pdfDoc As New PdfDocument(pdfWriter)
-	'		Dim document As New iText.Layout.Document(pdfDoc)
-
-	'		' Agregar una fuente estándar
-	'		Dim font As PdfFont = PdfFontFactory.CreateFont(StandardFonts.HELVETICA)
-
-	'		' Agregar el título
-	'		Dim titulo As New Paragraph("FACTURA DE PAGO DE CUOTA - GYMCAT")
-	'		titulo.SetFont(font).SetFontSize(20).SetTextAlignment(TextAlignment.CENTER)
-	'		document.Add(titulo)
-
-	'		Dim linea As LineSeparator = New LineSeparator(New SolidLine())
-	'		document.Add(linea)
-
-	'		' Agregar el logo del gimnasio
-	'		Dim imagen As New Image(ImageDataFactory.Create("C:\Users\Gaming\Documents\GitHub\GYMCAT\GYMCAT - SI\Resources\image-removebg-preview (1).png"))
-	'		imagen.ScaleAbsolute(66, 70)
-	'		imagen.SetFixedPosition(40, 695)
-	'		document.Add(imagen)
-
-	'		' Información del gimnasio
-	'		Dim infoGym As New Paragraph("GYMCAT S.A." & vbCrLf & "Dirección: Calle Falsa 123" & vbCrLf & "Teléfono: (123) 4567890")
-	'		infoGym.SetFont(font).SetFontSize(12).SetMarginTop(16).SetMarginLeft(80)
-	'		document.Add(infoGym)
-
-	'		' Fecha y forma de pago
-	'		Dim pagoInfo As New Paragraph("Fecha: " & dtpFechaMov.Text & vbCrLf & "Forma de pago: " & cbFormaPago.Text)
-	'		pagoInfo.SetFont(font).SetFontSize(12).SetMarginTop(20)
-	'		document.Add(pagoInfo)
-
-	'		' Información del cliente/miembro
-	'		Dim cliente As New Paragraph("INFORMACION DE MIEMBRO:" + vbCrLf + "Miembro: " + Nombre_Miembro + vbCrLf + "DNI: " + DNI_Miebro + vbCrLf + "Correo: " + Correo_Miembro)
-	'		cliente.SetFont(font).SetFontSize(12).SetMarginTop(20)
-	'		document.Add(cliente)
-
-	'		' Definir el ancho de las columnas
-	'		Dim columnWidths As Single() = {300, 100} ' Columna Curso más ancha, Columna Costo más estrecha
-
-	'		' Tabla de detalles de los cursos
-	'		Dim table As New iText.Layout.Element.Table(UnitValue.CreatePercentArray(columnWidths)) ' Usar el constructor que acepta los anchos de columnas
-	'		table.SetWidth(UnitValue.CreatePercentValue(80)) ' Reduzca el ancho de la tabla
-
-	'		' Agregar las cabeceras de columna
-	'		table.AddHeaderCell(New Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY).Add(New Paragraph("Curso").SetTextAlignment(TextAlignment.CENTER).SetBold()))
-	'		table.AddHeaderCell(New Cell().SetBackgroundColor(ColorConstants.LIGHT_GRAY).Add(New Paragraph("Costo").SetTextAlignment(TextAlignment.CENTER).SetBold()))
-
-	'		' Agregar las filas de datos
-	'		For Each row As Curso_Pago In ListaInscripciones
-	'			table.AddCell(New Cell().Add(New Paragraph(row.Nombre).SetTextAlignment(TextAlignment.CENTER)))
-	'			table.AddCell(New Cell().Add(New Paragraph(Convert.ToDecimal(row.Precio).ToString("C")).SetTextAlignment(TextAlignment.CENTER)))
-	'		Next
-	'		document.Add(table)
-
-	'		' Agregar el total
-	'		Dim total As Decimal = ListaInscripciones.Sum(Function(r) Convert.ToDecimal(r.Precio))
-	'		Dim ptotal As New Paragraph("Total: " & total.ToString("C"))
-	'		ptotal.SetFont(font).SetFontSize(15).SetFontColor(ColorConstants.RED).SetTextAlignment(TextAlignment.RIGHT).SetMarginTop(20)
-	'		document.Add(ptotal)
-
-	'		document.Close()
-	'		MsgBox("Factura generada correctamente")
-	'	End Sub
-
-	'  cbMiembros.
 
 
 End Class

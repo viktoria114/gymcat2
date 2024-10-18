@@ -6,339 +6,352 @@ Imports MySql.Data.MySqlClient
 Imports Mysqlx
 
 Public Class FormInscripciones
-	Private _Conexion As Conexion
-	Public Tabla As String = "TMiembros"
-	Public Tabla2 As String = "TInscripciones"
-	Private lector As MySqlDataReader
-	Private lector1 As MySqlDataReader
-	Private edicion As Boolean = False
-	Private PrevFila As DataGridViewCell
-	Private PopUp As FormPagopopup
-	Public miConexion As MySqlConnection
+    Private _Conexion As Conexion
+    Public Tabla As String = "TMiembros"
+    Public Tabla2 As String = "TInscripciones"
+    Private lector As MySqlDataReader
+    Private lector1 As MySqlDataReader
+    Private edicion As Boolean = False
+    Private PrevFila As DataGridViewCell
+    Private PopUp As FormPagopopup
+    Public miConexion As MySqlConnection
+    Public cursoactual
+    Public ListCursos As String
+    Public rep As Boolean = False
 
-	Public Shared listaIns As New List(Of Curso_Pago)
+    Public Shared listaIns As New List(Of Curso_Pago)
 
 #Region "FUNCIONES <<<"
 
-	Sub SeleccionarMiembro(IDMiembro As Integer)
-		PrevFila = dgvListadoMiembros.CurrentCell
-		_Conexion.GymcatDataSet.Tables("TInscritos").Clear()
-		_Conexion.GymcatDataSet.Tables("TNoInscritos").Clear()
+    Sub SeleccionarMiembro(IDMiembro As Integer)
+        PrevFila = dgvListadoMiembros.CurrentCell
+        _Conexion.GymcatDataSet.Tables("TInscritos").Clear()
+        _Conexion.GymcatDataSet.Tables("TNoInscritos").Clear()
 
-		'Llenar la tabla de Cursos Inscritos del Miembro
-		Dim ComandoIncritos As New MySqlCommand("SELECT miembros_cursos.ID_inscripción, cursos.nombre AS 'Curso', " +
-						"miembros_cursos.fecha_inscripcion AS 'Fecha de Inscripcion', miembros_cursos.meses FROM cursos, miembros_cursos " +
-						"WHERE miembros_cursos.FK_cursos = cursos.ID_cursos AND miembros_cursos.FK_miembros=@num", _Conexion.miConexion)
-		ComandoIncritos.Parameters.AddWithValue("@num", IDMiembro)
-		_Conexion.TablaDataAdapter.SelectCommand = ComandoIncritos
-		_Conexion.TablaDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey
-		_Conexion.TablaDataAdapter.Fill(_Conexion.GymcatDataSet.Tables("TInscritos"))
-		dgvCursosInscritos.DataSource = _Conexion.GymcatDataSet.Tables("TInscritos").DefaultView
+        'Llenar la tabla de Cursos Inscritos del Miembro
+        Dim ComandoIncritos As New MySqlCommand("SELECT miembros_cursos.ID_inscripción, cursos.nombre AS 'Curso', " +
+                        "miembros_cursos.fecha_inscripcion AS 'Fecha de Inscripcion', miembros_cursos.meses FROM cursos, miembros_cursos " +
+                        "WHERE miembros_cursos.FK_cursos = cursos.ID_cursos AND miembros_cursos.FK_miembros=@num", _Conexion.miConexion)
+        ComandoIncritos.Parameters.AddWithValue("@num", IDMiembro)
+        _Conexion.TablaDataAdapter.SelectCommand = ComandoIncritos
+        _Conexion.TablaDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey
+        _Conexion.TablaDataAdapter.Fill(_Conexion.GymcatDataSet.Tables("TInscritos"))
+        dgvCursosInscritos.DataSource = _Conexion.GymcatDataSet.Tables("TInscritos").DefaultView
 
-		'Llenar la tabla de Cursos a los que el miembro no esta Inscrito
-		Dim ComandoNoInscritos As New MySqlCommand("Select ID_cursos, nombre AS 'Curso', precio FROM cursos Where ID_cursos " +
-						"Not In (Select FK_cursos FROM miembros_cursos WHERE FK_miembros = @num)", _Conexion.miConexion)
-		ComandoNoInscritos.Parameters.AddWithValue("@num", IDMiembro)
-		_Conexion.TablaDataAdapter.SelectCommand = ComandoNoInscritos
-		_Conexion.TablaDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey
-		_Conexion.TablaDataAdapter.Fill(_Conexion.GymcatDataSet.Tables("TNoInscritos"))
-		dgvCursosDisponibles.DataSource = _Conexion.GymcatDataSet.Tables("TNoInscritos").DefaultView
+        'Llenar la tabla de Cursos a los que el miembro no esta Inscrito
+        Dim ComandoNoInscritos As New MySqlCommand("Select ID_cursos, nombre AS 'Curso', precio FROM cursos Where ID_cursos " +
+                        "Not In (Select FK_cursos FROM miembros_cursos WHERE FK_miembros = @num)", _Conexion.miConexion)
+        ComandoNoInscritos.Parameters.AddWithValue("@num", IDMiembro)
+        _Conexion.TablaDataAdapter.SelectCommand = ComandoNoInscritos
+        _Conexion.TablaDataAdapter.MissingSchemaAction = MissingSchemaAction.AddWithKey
+        _Conexion.TablaDataAdapter.Fill(_Conexion.GymcatDataSet.Tables("TNoInscritos"))
+        dgvCursosDisponibles.DataSource = _Conexion.GymcatDataSet.Tables("TNoInscritos").DefaultView
 
-		dgvCursosInscritos.Columns(0).Visible = False
-		dgvCursosDisponibles.Columns(0).Visible = False
-		dgvCursosDisponibles.Columns(2).Visible = False
-
-
-		dgvCursosInscritos.ClearSelection()
-		dgvCursosDisponibles.ClearSelection()
-		btnInscribir.Enabled = False
-		btnDesinscribir.Enabled = False
-	End Sub
+        dgvCursosInscritos.Columns(0).Visible = False
+        dgvCursosDisponibles.Columns(0).Visible = False
+        dgvCursosDisponibles.Columns(2).Visible = False
 
 
-	Sub Desinscribir(FilaCurso As DataGridViewRow)
+        dgvCursosInscritos.ClearSelection()
+        dgvCursosDisponibles.ClearSelection()
+        btnInscribir.Enabled = False
+        btnDesinscribir.Enabled = False
+    End Sub
 
-		If (MessageBox.Show("¿Quiere desincribir al miembro " + dgvListadoMiembros.CurrentRow.Cells(1).Value.ToString + " del Curso " +
-			FilaCurso.Cells(1).Value.ToString + "?", "Desincribir Miembro", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.OK) Then
-			edicion = True
-			_Conexion.GymcatDataSet.Tables(Tabla2).Rows.Find(FilaCurso.Cells(0).Value).Delete()
 
-			Dim cursoactual = FilaCurso.Cells(1).Value.ToString
+    Sub Desinscribir(FilaCurso As DataGridViewRow)
 
-			btnCancelar.Enabled = True
-			btnGuardar.Enabled = True
-			lbDesinscripciones.Visible = True
-			lbDesinscripciones.Text += vbCrLf + "    - " + FilaCurso.Cells(1).Value.ToString
-			SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+        If (MessageBox.Show("¿Quiere desincribir al miembro " + dgvListadoMiembros.CurrentRow.Cells(1).Value.ToString + " del Curso " +
+            FilaCurso.Cells(1).Value.ToString + "?", "Desincribir Miembro", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.OK) Then
+            edicion = True
+            _Conexion.GymcatDataSet.Tables(Tabla2).Rows.Find(FilaCurso.Cells(0).Value).Delete()
 
-			miConexion = New MySqlConnection("Server=localhost; Database=gymcat; Uid=root; Pwd=;")
-			miConexion.Open()
-			Dim consulta = "SELECT * FROM cursos WHERE cursos.nombre=@cursos"
-			Dim consulta1 = "SELECT * FROM miembros WHERE ID_miembro=@id
+            Dim cursoactual = FilaCurso.Cells(1).Value.ToString
+
+            btnCancelar.Enabled = True
+            btnGuardar.Enabled = True
+            lbDesinscripciones.Visible = True
+            lbDesinscripciones.Text += vbCrLf + "    - " + FilaCurso.Cells(1).Value.ToString
+
+            dgvCursosInscritos.Rows.Remove(dgvCursosInscritos.CurrentRow)
+
+            miConexion = New MySqlConnection("Server=localhost; Database=gymcat; Uid=root; Pwd=;")
+            miConexion.Open()
+            Dim consulta = "SELECT * FROM cursos WHERE cursos.nombre=@cursos"
+            Dim consulta1 = "SELECT * FROM miembros WHERE ID_miembro=@id
 			"
 
-			Dim comando As New MySqlCommand(consulta, miConexion)
-			Dim comando1 As New MySqlCommand(consulta1, miConexion)
-			comando.Parameters.AddWithValue("@cursos", cursoactual)
-			comando1.Parameters.AddWithValue("@id", dgvListadoMiembros.CurrentRow.Cells(0).Value)
+            Dim comando As New MySqlCommand(consulta, miConexion)
+            Dim comando1 As New MySqlCommand(consulta1, miConexion)
+            comando.Parameters.AddWithValue("@cursos", cursoactual)
+            comando1.Parameters.AddWithValue("@id", dgvListadoMiembros.CurrentRow.Cells(0).Value)
 
-			lector = comando.ExecuteReader
+            lector = comando.ExecuteReader
 
-			lector.Read()
-			Dim precio = lector("precio")
-			lector.Close()
-			lector1 = comando1.ExecuteReader
+            lector.Read()
+            Dim precio = lector("precio")
+            lector.Close()
+            lector1 = comando1.ExecuteReader
 
-			lector1.Read()
+            lector1.Read()
 
-			Dim fila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla).Rows.Find(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+            Dim fila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla).Rows.Find(dgvListadoMiembros.CurrentRow.Cells(0).Value)
 
-			fila("costo_total") = lector1("costo_total") - precio
-		End If
+            fila("costo_total") = lector1("costo_total") - precio
+        End If
 
-	End Sub
-
-
-	Sub Inscribir(FilaCurso As DataGridViewRow)
-
-		If (MessageBox.Show("¿Quiere inscribir al miembro " + dgvListadoMiembros.CurrentRow.Cells(1).Value.ToString + "al Curso " +
-			FilaCurso.Cells(1).Value.ToString + "?", "Inscribir Miembro", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.OK) Then
-
-			Dim cursoactual = FilaCurso.Cells(1).Value.ToString
-
-			edicion = True
-			Dim NuevaFila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla2).NewRow
-			NuevaFila("FK_miembros") = dgvListadoMiembros.CurrentRow.Cells(0).Value
-			NuevaFila("FK_cursos") = dgvCursosDisponibles.CurrentRow.Cells(0).Value
-			NuevaFila("Fecha_Inscripcion") = Today
-			NuevaFila("Meses") = tbMeses.Text
-			_Conexion.GymcatDataSet.Tables(Tabla2).Rows.Add(NuevaFila)
-
-			btnCancelar.Enabled = True
-			btnGuardar.Enabled = True
-			lbInscripciones.Visible = True
-			lbInscripciones.Text += vbCrLf + "    - " + FilaCurso.Cells(1).Value.ToString
-			listaIns.Add(New Curso_Pago(FilaCurso.Cells(0).Value, FilaCurso.Cells(1).Value.ToString, FilaCurso.Cells(2).Value, tbMeses.Text))
-			SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
-
-			miConexion = New MySqlConnection("Server=localhost; Database=gymcat; Uid=root; Pwd=;")
-			miConexion.Open()
-			Dim consulta = "SELECT * FROM cursos WHERE cursos.nombre=@cursos"
-			Dim consulta1 = "SELECT * FROM miembros WHERE ID_miembro=@id
-			"
-
-			Dim comando As New MySqlCommand(consulta, miConexion)
-			Dim comando1 As New MySqlCommand(consulta1, miConexion)
-			comando.Parameters.AddWithValue("@cursos", cursoactual)
-			comando1.Parameters.AddWithValue("@id", dgvListadoMiembros.CurrentRow.Cells(0).Value)
-
-			lector = comando.ExecuteReader
-
-			lector.Read()
-			Dim precio = lector("precio")
-			lector.Close()
-			lector1 = comando1.ExecuteReader
-
-			lector1.Read()
-
-			Dim fila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla).Rows.Find(dgvListadoMiembros.CurrentRow.Cells(0).Value)
-
-			fila("costo_total") = lector1("costo_total") + precio
+    End Sub
 
 
-		End If
-	End Sub
+    Sub Inscribir(FilaCurso As DataGridViewRow)
+
+        If (MessageBox.Show("¿Quiere inscribir al miembro " + dgvListadoMiembros.CurrentRow.Cells(1).Value.ToString + "al Curso " +
+            FilaCurso.Cells(1).Value.ToString + "?", "Inscribir Miembro", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.OK) Then
+
+            cursoactual = FilaCurso.Cells(1).Value.ToString
+            If rep = False Then
+                ListCursos = "c.nombre ='" + cursoactual + "'"
+            Else
+                ListCursos += " OR c.nombre ='" + cursoactual + "'"
+            End If
+
+            edicion = True
+            Dim NuevaFila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla2).NewRow
+            NuevaFila("FK_miembros") = dgvListadoMiembros.CurrentRow.Cells(0).Value
+            NuevaFila("FK_cursos") = dgvCursosDisponibles.CurrentRow.Cells(0).Value
+            NuevaFila("Fecha_Inscripcion") = Today
+            NuevaFila("Meses") = tbMeses.Text
+            _Conexion.GymcatDataSet.Tables(Tabla2).Rows.Add(NuevaFila)
+
+            btnCancelar.Enabled = True
+            btnGuardar.Enabled = True
+            lbInscripciones.Visible = True
+            lbInscripciones.Text += vbCrLf + "    - " + FilaCurso.Cells(1).Value.ToString
+            listaIns.Add(New Curso_Pago(FilaCurso.Cells(0).Value, FilaCurso.Cells(1).Value.ToString, FilaCurso.Cells(2).Value, tbMeses.Text))
+
+            dgvCursosDisponibles.Rows.Remove(dgvCursosDisponibles.CurrentRow)
+
+            miConexion = New MySqlConnection("Server=localhost; Database=gymcat; Uid=root; Pwd=;")
+            miConexion.Open()
+            Dim consulta = "SELECT * FROM cursos WHERE cursos.nombre=@cursos"
+            Dim consulta1 = "SELECT * FROM miembros WHERE ID_miembro=@id
+"
+
+            Dim comando As New MySqlCommand(consulta, miConexion)
+            Dim comando1 As New MySqlCommand(consulta1, miConexion)
+            comando.Parameters.AddWithValue("@cursos", cursoactual)
+            comando1.Parameters.AddWithValue("@id", dgvListadoMiembros.CurrentRow.Cells(0).Value)
+
+            lector = comando.ExecuteReader
+
+            lector.Read()
+            Dim precio = lector("precio")
+            lector.Close()
+            lector1 = comando1.ExecuteReader
+
+            lector1.Read()
+
+            Dim fila As DataRow = _Conexion.GymcatDataSet.Tables(Tabla).Rows.Find(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+
+            fila("costo_total") = lector1("costo_total") + precio
+
+        End If
+    End Sub
 
 
-	Sub MostrarInfoCurso(curso As DataGridViewRow)
+    Sub MostrarInfoCurso(curso As DataGridViewRow)
 
-		Dim comando As New MySqlCommand("SELECT cursos.nombre,horario,precio,dias_clase,FK_empleados,CONCAT(empleados.nombre,' ',empleados.apellido)" +
-									" AS 'ProfNombre' FROM cursos,empleados WHERE empleados.id_empleados=cursos.FK_empleados " + "
+        Dim comando As New MySqlCommand("SELECT cursos.nombre,horario,precio,dias_clase,FK_empleados,CONCAT(empleados.nombre,' ',empleados.apellido)" +
+                                    " AS 'ProfNombre' FROM cursos,empleados WHERE empleados.id_empleados=cursos.FK_empleados " + "
 									AND cursos.nombre= '" + curso.Cells(1).Value.ToString + "'", _Conexion.miConexion)
-		lector = comando.ExecuteReader
-		lector.Read()
-		lbCursos.Visible = True
-		lbCursos.Text = "Curso: " + lector("nombre").ToString
-		lbHorariosCurso.Visible = True
-		lbHorariosCurso.Text = "Horarios: " + lector("horario")
-		lbPrecioCurso.Visible = True
-		lbPrecioCurso.Text = "Precio: $" + lector("precio").ToString
-		lbDiasCurso.Visible = True
-		lbDiasCurso.Text = "Dias de Clase: " + lector("dias_clase")
-		lbProfesorCurso.Visible = True
-		lbProfesorCurso.Text = "Profesor: " + lector("ProfNombre").ToString
-		lector.Close()
+        lector = comando.ExecuteReader
+        lector.Read()
+        lbCursos.Visible = True
+        lbCursos.Text = "Curso: " + lector("nombre").ToString
+        lbHorariosCurso.Visible = True
+        lbHorariosCurso.Text = "Horarios: " + lector("horario")
+        lbPrecioCurso.Visible = True
+        lbPrecioCurso.Text = "Precio: $" + lector("precio").ToString
+        lbDiasCurso.Visible = True
+        lbDiasCurso.Text = "Dias de Clase: " + lector("dias_clase")
+        lbProfesorCurso.Visible = True
+        lbProfesorCurso.Text = "Profesor: " + lector("ProfNombre").ToString
+        lector.Close()
 
-	End Sub
+    End Sub
 
 
-	Public Sub CargarDatosForm()
-		Dim consulta As String = "SELECT ID_miembro, nombre AS Nombre, apellido AS Apellido, DNI, costo_total FROM miembros"
-		Dim consulta2 As String = "SELECT * FROM miembros_cursos"
+    Public Sub CargarDatosForm()
+        Dim consulta As String = "SELECT ID_miembro, nombre AS Nombre, apellido AS Apellido, DNI, costo_total FROM miembros"
+        Dim consulta2 As String = "SELECT * FROM miembros_cursos"
 
-		_Conexion = New Conexion(consulta, consulta2, Tabla, Tabla2)
-		_Conexion.GymcatDataSet.Tables.Add("TInscritos")
-		_Conexion.GymcatDataSet.Tables.Add("TNoInscritos")
-		dgvListadoMiembros.DataSource = _Conexion.vistaDatos
-		dgvListadoMiembros.Columns(0).Visible = False
-		dgvListadoMiembros.Columns(4).Visible = False
-		dgvListadoMiembros.CurrentCell = dgvListadoMiembros.Rows(0).Cells(1)
+        _Conexion = New Conexion(consulta, consulta2, Tabla, Tabla2)
+        _Conexion.GymcatDataSet.Tables.Add("TInscritos")
+        _Conexion.GymcatDataSet.Tables.Add("TNoInscritos")
+        dgvListadoMiembros.DataSource = _Conexion.vistaDatos
+        dgvListadoMiembros.Columns(0).Visible = False
+        dgvListadoMiembros.Columns(4).Visible = False
+        dgvListadoMiembros.CurrentCell = dgvListadoMiembros.Rows(0).Cells(1)
 
-		_Conexion.miConexion.Open()
-		SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
-		ConfigurarComandos()
-		'_Conexion.miConexion.close()
-	End Sub
+        _Conexion.miConexion.Open()
+        SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+        ConfigurarComandos()
+        '_Conexion.miConexion.close()
+    End Sub
 
-	Private Sub ConfigurarComandos()
-		_Conexion.TablaDataAdapter.DeleteCommand = New MySqlCommand("DELETE FROM miembros_cursos WHERE ID_inscripción = @id", _Conexion.miConexion)
-		_Conexion.TablaDataAdapter.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int32, 0, "ID_inscripción")
+    Private Sub ConfigurarComandos()
+        _Conexion.TablaDataAdapter.DeleteCommand = New MySqlCommand("DELETE FROM miembros_cursos WHERE ID_inscripción = @id", _Conexion.miConexion)
+        _Conexion.TablaDataAdapter.DeleteCommand.Parameters.Add("@id", MySqlDbType.Int32, 0, "ID_inscripción")
 
-		_Conexion.TablaDataAdapter.InsertCommand = New MySqlCommand("INSERT INTO miembros_cursos (FK_miembros, FK_cursos, Fecha_Inscripcion, Meses) VALUES (@miem, @cur, @fe, @mes)", _Conexion.miConexion)
-		_Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@miem", MySqlDbType.Int32, 11, "FK_miembros")
-		_Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@cur", MySqlDbType.Int32, 11, "FK_cursos")
-		_Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@fe", MySqlDbType.Date, 10, "Fecha_Inscripcion")
-		_Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@mes", MySqlDbType.Int32, 0, "Meses")
+        _Conexion.TablaDataAdapter.InsertCommand = New MySqlCommand("INSERT INTO miembros_cursos (FK_miembros, FK_cursos, Fecha_Inscripcion, Meses) VALUES (@miem, @cur, @fe, @mes)", _Conexion.miConexion)
+        _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@miem", MySqlDbType.Int32, 11, "FK_miembros")
+        _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@cur", MySqlDbType.Int32, 11, "FK_cursos")
+        _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@fe", MySqlDbType.Date, 10, "Fecha_Inscripcion")
+        _Conexion.TablaDataAdapter.InsertCommand.Parameters.Add("@mes", MySqlDbType.Int32, 0, "Meses")
 
-		_Conexion.TablaDataAdapter.UpdateCommand = New MySqlCommand("UPDATE miembros_cursos SET FK_miembros = @miem, FK_cursos = @cur, Fecha_Inscripcion = @fe WHERE ID_inscripción = @id", _Conexion.miConexion)
-		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@miem", MySqlDbType.Int32, 11, "FK_miembros")
-		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@cur", MySqlDbType.Int32, 11, "FK_cursos")
-		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@fe", MySqlDbType.Date, 10, "Fecha_Inscripcion")
-		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@mes", MySqlDbType.Int32, 0, "Meses")
-		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int32, 0, "ID_inscripción")
+        _Conexion.TablaDataAdapter.UpdateCommand = New MySqlCommand("UPDATE miembros_cursos SET FK_miembros = @miem, FK_cursos = @cur, Fecha_Inscripcion = @fe WHERE ID_inscripción = @id", _Conexion.miConexion)
+        _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@miem", MySqlDbType.Int32, 11, "FK_miembros")
+        _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@cur", MySqlDbType.Int32, 11, "FK_cursos")
+        _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@fe", MySqlDbType.Date, 10, "Fecha_Inscripcion")
+        _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@mes", MySqlDbType.Int32, 0, "Meses")
+        _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int32, 0, "ID_inscripción")
 
-		_Conexion.TablaDataAdapter.UpdateCommand = New MySqlCommand("UPDATE miembros SET costo_total=@cost WHERE ID_miembro = @id", _Conexion.miConexion)
-		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@cost", MySqlDbType.Int32, 0, "costo_total")
-		_Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int32, 0, "ID_miembro")
+        _Conexion.TablaDataAdapter.UpdateCommand = New MySqlCommand("UPDATE miembros SET costo_total=@cost WHERE ID_miembro = @id", _Conexion.miConexion)
+        _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@cost", MySqlDbType.Int32, 0, "costo_total")
+        _Conexion.TablaDataAdapter.UpdateCommand.Parameters.Add("@id", MySqlDbType.Int32, 0, "ID_miembro")
 
-	End Sub
+    End Sub
 
 #End Region
 
-	Private Sub FormInscripciones_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-		lbDesinscripciones.Text = vbCrLf + "Desisncripciones:"
-		cbOpciones.Text = "Nombre"
-	End Sub
+    Private Sub FormInscripciones_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lbDesinscripciones.Text = vbCrLf + "Desisncripciones:"
+        cbOpciones.Text = "Nombre"
+    End Sub
 
 
-	Private Sub dgvListadoMiembros_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListadoMiembros.CellClick
-		If edicion Then
+    Private Sub dgvListadoMiembros_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListadoMiembros.CellClick
+        If edicion Then
 
-			If (MessageBox.Show("Se realizaron cambios que todavia no han sido guardados." + vbCrLf + "Desea descartar los cambios realizados?",
-						   "Cambios Sin Guardar", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.OK) Then
-				_Conexion.GymcatDataSet.Tables(Tabla2).RejectChanges()
-				btnCancelar.Enabled = False
-				btnGuardar.Enabled = False
-				edicion = False
-				SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
-				lbInscripciones.Text = "Inscripciones:"
-			End If
-			dgvListadoMiembros.CurrentCell = PrevFila
-		Else
-			SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
-		End If
-	End Sub
-
-
-	Private Sub btnInscribir_Click(sender As Object, e As EventArgs) Handles btnInscribir.Click
-		Inscribir(dgvCursosDisponibles.CurrentRow)
-	End Sub
-
-	Private Sub btnDesinscribir_Click(sender As Object, e As EventArgs) Handles btnDesinscribir.Click
-		Desinscribir(dgvCursosInscritos.CurrentRow)
-	End Sub
-
-	Private Sub dgvCursosInscritos_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCursosInscritos.CellClick
-		btnInscribir.Enabled = False
-		btnDesinscribir.Enabled = True
-		MostrarInfoCurso(dgvCursosInscritos.CurrentRow)
-		dgvCursosDisponibles.ClearSelection()
-	End Sub
-
-	Private Sub dgvCursosDisponibles_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCursosDisponibles.CellClick
-		btnInscribir.Enabled = True
-		btnDesinscribir.Enabled = False
-		MostrarInfoCurso(dgvCursosDisponibles.CurrentRow)
-		dgvCursosInscritos.ClearSelection()
-	End Sub
-
-	Private Sub dgvCursosDisponibles_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCursosDisponibles.CellDoubleClick
-		btnDesinscribir.Enabled = False
-		Inscribir(dgvCursosDisponibles.CurrentRow)
-		dgvCursosDisponibles.ClearSelection()
-
-	End Sub
-
-	Private Sub dgvCursosInscriptos_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCursosInscritos.CellDoubleClick
-		btnInscribir.Enabled = False
-		Desinscribir(dgvCursosInscritos.CurrentRow)
-		dgvCursosDisponibles.ClearSelection()
-	End Sub
-
-	Private Sub tbBuscar_TextChanged(sender As Object, e As EventArgs) Handles tbBuscar.TextChanged
-		Select Case cbOpciones.SelectedItem.ToString()
-			Case "Nombre"
-				_Conexion.vistaDatos.RowFilter = "nombre LIKE '" + tbBuscar.Text + "%'"
-				'vistaDatos.RowFilter = columnaSeleccionada + " LIKE '" + tbBuscar.Text + "%'"
-			Case "Apellido"
-				_Conexion.vistaDatos.RowFilter = "apellido LIKE '" + tbBuscar.Text + "%'"
-			Case "DNI"
-				_Conexion.vistaDatos.RowFilter = String.Format("CONVERT({0}, System.String) like '%{1}%'", "DNI", tbBuscar.Text)
-		End Select
-	End Sub
+            If (MessageBox.Show("Se realizaron cambios que todavia no han sido guardados." + vbCrLf + "Desea descartar los cambios realizados?",
+                           "Cambios Sin Guardar", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) = DialogResult.OK) Then
+                _Conexion.GymcatDataSet.Tables(Tabla2).RejectChanges()
+                btnCancelar.Enabled = False
+                btnGuardar.Enabled = False
+                edicion = False
+                SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+                lbInscripciones.Text = "Inscripciones:"
+            End If
+            dgvListadoMiembros.CurrentCell = PrevFila
+        Else
+            SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+        End If
+    End Sub
 
 
-	Private Sub btnGuardar_Click(sender As Object, e As EventArgs) Handles btnGuardar.Click
-		If (MessageBox.Show("Desea Guardar las Inscripciones realizadas?", "Guardar Cambios",
-				MessageBoxButtons.YesNo) = DialogResult.Yes) Then
+    Private Sub btnInscribir_Click(sender As Object, e As EventArgs) Handles btnInscribir.Click
+        Inscribir(dgvCursosDisponibles.CurrentRow)
+        rep = True
+
+    End Sub
+
+    Private Sub btnDesinscribir_Click(sender As Object, e As EventArgs) Handles btnDesinscribir.Click
+        Desinscribir(dgvCursosInscritos.CurrentRow)
+    End Sub
+
+    Private Sub dgvCursosInscritos_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCursosInscritos.CellClick
+        btnInscribir.Enabled = False
+        btnDesinscribir.Enabled = True
+        MostrarInfoCurso(dgvCursosInscritos.CurrentRow)
+        dgvCursosDisponibles.ClearSelection()
+    End Sub
+
+    Private Sub dgvCursosDisponibles_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCursosDisponibles.CellClick
+        btnInscribir.Enabled = True
+        btnDesinscribir.Enabled = False
+        MostrarInfoCurso(dgvCursosDisponibles.CurrentRow)
+        dgvCursosInscritos.ClearSelection()
+    End Sub
+
+    Private Sub dgvCursosDisponibles_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCursosDisponibles.CellDoubleClick
+        btnDesinscribir.Enabled = False
+        Inscribir(dgvCursosDisponibles.CurrentRow)
+        dgvCursosDisponibles.ClearSelection()
+
+    End Sub
+
+    Private Sub dgvCursosInscriptos_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvCursosInscritos.CellDoubleClick
+        btnInscribir.Enabled = False
+        Desinscribir(dgvCursosInscritos.CurrentRow)
+        dgvCursosDisponibles.ClearSelection()
+    End Sub
+
+    Private Sub tbBuscar_TextChanged(sender As Object, e As EventArgs) Handles tbBuscar.TextChanged
+        Select Case cbOpciones.SelectedItem.ToString()
+            Case "Nombre"
+                _Conexion.vistaDatos.RowFilter = "nombre LIKE '" + tbBuscar.Text + "%'"
+                'vistaDatos.RowFilter = columnaSeleccionada + " LIKE '" + tbBuscar.Text + "%'"
+            Case "Apellido"
+                _Conexion.vistaDatos.RowFilter = "apellido LIKE '" + tbBuscar.Text + "%'"
+            Case "DNI"
+                _Conexion.vistaDatos.RowFilter = String.Format("CONVERT({0}, System.String) like '%{1}%'", "DNI", tbBuscar.Text)
+        End Select
+    End Sub
 
 
-			If listaIns.Count <> 0 Then
-				PopUp = New FormPagopopup(listaIns, dgvListadoMiembros.CurrentRow.Cells(3).Value.ToString)
-				PopUp.ShowDialog()
+    Private Sub btnGuardar_Click(sender As Object, e As EventArgs) Handles btnGuardar.Click
+        If (MessageBox.Show("Desea Guardar las Inscripciones realizadas?", "Guardar Cambios",
+                MessageBoxButtons.YesNo) = DialogResult.Yes) Then
 
-			End If
-			_Conexion.TablaDataAdapter.Update(_Conexion.GymcatDataSet.Tables(Tabla2))
-			_Conexion.TablaDataAdapter.Update(_Conexion.GymcatDataSet.Tables(Tabla))
-			btnGuardar.Enabled = False
-			btnCancelar.Enabled = False
-			edicion = False
-			lbInscripciones.Visible = False
-			lbInscripciones.Text = "Inscripciones:"
-			lbDesinscripciones.Visible = False
-			lbDesinscripciones.Text = vbCrLf + "Desisncripciones:"
+            rep = False
 
-			SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
-		End If
-	End Sub
+            If listaIns.Count <> 0 Then
+                PopUp = New FormPagopopup(listaIns, dgvListadoMiembros.CurrentRow.Cells(3).Value.ToString)
+                PopUp.ShowDialog()
+
+            End If
+            _Conexion.TablaDataAdapter.Update(_Conexion.GymcatDataSet.Tables(Tabla2))
+            _Conexion.TablaDataAdapter.Update(_Conexion.GymcatDataSet.Tables(Tabla))
+            btnGuardar.Enabled = False
+            btnCancelar.Enabled = False
+            edicion = False
+            lbInscripciones.Visible = False
+            lbInscripciones.Text = "Inscripciones:"
+            lbDesinscripciones.Visible = False
+            lbDesinscripciones.Text = vbCrLf + "Desisncripciones:"
+
+            SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+        End If
+    End Sub
 
 
 
-	Private Sub btnCancelar_Click_1(sender As Object, e As EventArgs) Handles btnCancelar.Click
+    Private Sub btnCancelar_Click_1(sender As Object, e As EventArgs) Handles btnCancelar.Click
 
-		If (MessageBox.Show("Desea Cancelar las Inscripciones realizadas?", "Cancelar Cambios",
-				MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes) Then
-			_Conexion.GymcatDataSet.Tables(Tabla2).RejectChanges()
-			btnGuardar.Enabled = False
-			btnCancelar.Enabled = False
-			edicion = False
-			listaIns.Clear()
-			lbInscripciones.Visible = False
-			lbInscripciones.Text = "Inscripciones:"
-			lbDesinscripciones.Visible = False
-			lbDesinscripciones.Text = vbCrLf + "Desisncripciones:"
-			SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
-		End If
+        If (MessageBox.Show("Desea Cancelar las Inscripciones realizadas?", "Cancelar Cambios",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = DialogResult.Yes) Then
+            _Conexion.GymcatDataSet.Tables(Tabla2).RejectChanges()
+            btnGuardar.Enabled = False
+            btnCancelar.Enabled = False
+            edicion = False
+            listaIns.Clear()
+            lbInscripciones.Visible = False
+            lbInscripciones.Text = "Inscripciones:"
+            lbDesinscripciones.Visible = False
+            lbDesinscripciones.Text = vbCrLf + "Desisncripciones:"
+            SeleccionarMiembro(dgvListadoMiembros.CurrentRow.Cells(0).Value)
+        End If
 
-	End Sub
+    End Sub
 
-	Private Sub btnReducirMeses_Click(sender As Object, e As EventArgs) Handles btnReducirMeses.Click
-		If 0 <> tbMeses.Text Then
-			tbMeses.Text -= 1
-		End If
-	End Sub
+    Private Sub btnReducirMeses_Click(sender As Object, e As EventArgs) Handles btnReducirMeses.Click
+        If 0 <> tbMeses.Text Then
+            tbMeses.Text -= 1
+        End If
+    End Sub
 
-	Private Sub btnAumentarMeses_Click(sender As Object, e As EventArgs) Handles btnAumentarMeses.Click
-		tbMeses.Text += 1
-	End Sub
+    Private Sub btnAumentarMeses_Click(sender As Object, e As EventArgs) Handles btnAumentarMeses.Click
+        tbMeses.Text += 1
+    End Sub
+
 End Class

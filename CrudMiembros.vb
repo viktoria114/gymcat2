@@ -42,7 +42,7 @@ Public Class CrudMiembros
             fila("edad") = nuevoMiembro.tbEdad.Text
             fila("fecha_inscripcion") = nuevoMiembro.dtpInscripcion.Text
             fila("duracion_membresia") = nuevoMiembro.cbDuracMemb.Text
-            fila("costo_total") = nuevoMiembro.tbCostoTotal.Text
+            fila("costo_total") = "15000"
             fila("deudor") = nuevoMiembro.cbDeudor.Checked
             fila("telefono") = nuevoMiembro.tbTelef.Text
             fila("correo") = nuevoMiembro.tbCorreo.Text

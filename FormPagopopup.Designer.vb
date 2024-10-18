@@ -23,7 +23,6 @@ Partial Class FormPagopopup
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         btnPagar = New Button()
-        btnImprimir = New Button()
         Label10 = New Label()
         dgvFactura = New DataGridView()
         colDescripción = New DataGridViewTextBoxColumn()
@@ -73,26 +72,12 @@ Partial Class FormPagopopup
         btnPagar.Font = New Font("Cascadia Mono SemiBold", 12F, FontStyle.Bold)
         btnPagar.ForeColor = Color.WhiteSmoke
         btnPagar.ImageAlign = ContentAlignment.MiddleRight
-        btnPagar.Location = New Point(62, 6)
+        btnPagar.Location = New Point(157, 6)
         btnPagar.Name = "btnPagar"
         btnPagar.Size = New Size(114, 59)
         btnPagar.TabIndex = 16
         btnPagar.Text = "Pagar"
         btnPagar.UseVisualStyleBackColor = False
-        ' 
-        ' btnImprimir
-        ' 
-        btnImprimir.BackColor = Color.FromArgb(CByte(239), CByte(41), CByte(84))
-        btnImprimir.FlatStyle = FlatStyle.Popup
-        btnImprimir.Font = New Font("Cascadia Mono SemiBold", 12F, FontStyle.Bold)
-        btnImprimir.ForeColor = Color.WhiteSmoke
-        btnImprimir.ImageAlign = ContentAlignment.MiddleRight
-        btnImprimir.Location = New Point(240, 6)
-        btnImprimir.Name = "btnImprimir"
-        btnImprimir.Size = New Size(114, 59)
-        btnImprimir.TabIndex = 17
-        btnImprimir.Text = "Imprimir"
-        btnImprimir.UseVisualStyleBackColor = False
         ' 
         ' Label10
         ' 
@@ -296,7 +281,6 @@ Partial Class FormPagopopup
         ' 
         Panel1.AutoSize = True
         Panel1.Controls.Add(btnPagar)
-        Panel1.Controls.Add(btnImprimir)
         Panel1.Dock = DockStyle.Top
         Panel1.Location = New Point(0, 368)
         Panel1.Name = "Panel1"
@@ -477,7 +461,6 @@ Partial Class FormPagopopup
         PerformLayout()
     End Sub
     Friend WithEvents btnPagar As Button
-    Friend WithEvents btnImprimir As Button
 	Friend WithEvents Label10 As Label
     Friend WithEvents dgvFactura As DataGridView
     Friend WithEvents dtpFechaMov As DateTimePicker
