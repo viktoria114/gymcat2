@@ -492,9 +492,8 @@ Public Class FormPagopopup
         End If
 
         lector.Close()
-	Public Sub cursosapagar(curso)
-		miConexion.Open()
-		Dim comando As New MySqlCommand("SELECT * FROM cursos
+        miConexion.Close()
+    End Sub
 
 
 End Class
